@@ -1,8 +1,8 @@
-package com.cybs.crypto.factory;
+package com.cybsec.crypto.factory;
 
-import com.cybs.crypto.Cryptography;
-import com.cybs.crypto.impl.AESCryptography;
-import com.cybs.crypto.impl.RSACryptography;
+import com.cybsec.crypto.Cryptography;
+import com.cybsec.crypto.impl.AESCryptography;
+import com.cybsec.crypto.impl.RSACryptography;
 
 public class CryptoFactory {
     public Cryptography getCrypto(String type) {

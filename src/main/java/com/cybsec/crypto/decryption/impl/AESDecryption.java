@@ -1,6 +1,6 @@
-package com.cybs.crypto.decryption.impl;
+package com.cybsec.crypto.decryption.impl;
 
-import com.cybs.crypto.decryption.Decryption;
+import com.cybsec.crypto.decryption.Decryption;
 
 public class AESDecryption implements Decryption {
     @Override

@@ -1,6 +1,6 @@
-package com.cybs.crypto.impl;
+package com.cybsec.crypto.impl;
 
-import com.cybs.crypto.Cryptography;
+import com.cybsec.crypto.Cryptography;
 import org.apache.commons.codec.DecoderException;
 
 import javax.crypto.BadPaddingException;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import static com.cybs.crypto.encryption.util.EncryptionUtil.*;
+import static com.cybsec.crypto.encryption.util.EncryptionUtil.*;
 
 public class RSACryptography implements Cryptography {
     @Override

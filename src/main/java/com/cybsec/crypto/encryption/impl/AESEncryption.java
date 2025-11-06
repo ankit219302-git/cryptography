@@ -1,6 +1,6 @@
-package com.cybs.crypto.encryption.impl;
+package com.cybsec.crypto.encryption.impl;
 
-import com.cybs.crypto.encryption.Encryption;
+import com.cybsec.crypto.encryption.Encryption;
 
 public class AESEncryption implements Encryption {
     @Override

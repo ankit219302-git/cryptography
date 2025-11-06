@@ -1,6 +1,6 @@
-package com.cybs.crypto;
+package com.cybsec.crypto;
 
-import com.cybs.crypto.factory.CryptoFactory;
+import com.cybsec.crypto.factory.CryptoFactory;
 
 import java.util.HashMap;
 import java.util.Map;

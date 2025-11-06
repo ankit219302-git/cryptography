@@ -1,4 +1,4 @@
-package com.cybs.crypto.encryption.util;
+package com.cybsec.crypto.encryption.util;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;

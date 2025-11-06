@@ -1,4 +1,4 @@
-package com.cybs.crypto.decryption.util;
+package com.cybsec.crypto.decryption.util;
 
 public class DecryptionUtil {
 }

@@ -1,4 +1,4 @@
-package com.cybs.crypto;
+package com.cybsec.crypto;
 
 import org.apache.commons.codec.DecoderException;
 
