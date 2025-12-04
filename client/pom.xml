@@ -34,10 +34,6 @@
             <scope>compile</scope> <!-- This is the default scope and would be fine even if not defined explicitly -->
         </dependency>
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
         </dependency>
