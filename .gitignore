@@ -2,14 +2,13 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.idea/
-PC.iml
+**/test/resources/keys/aes/*
+**/test/resources/keys/rsa/*
+**/test/resources/cert/*
+**/test/resources/keystore/*
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/
 *.iws
 *.iml
 *.ipr
