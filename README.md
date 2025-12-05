@@ -8,7 +8,7 @@ A modular Java-based cryptography system implementing secure **RSA-OAEP** for as
 cryptography/
 │
 ├── encryption/      → Contains AES-GCM and RSA-OAEP encryption utilities
-├── decryption/      → Contains decryption utilities for AES-GCM & RSA-OAEP
+├── decryption/      → Contains AES-GCM and RSA-OAEP decryption utilities
 └── client/          → Client module to be consumed for using encryption/decryption functionalities
 ```
 
@@ -33,10 +33,11 @@ Each module has its own source code under `src/main/java`.
 - Safe Base64 encoding for transport
 
 
-### - Key Storage (PKCS12)
-- Private key stored in **keystore.p12**
+### - Key Storage (PKCS12) 
+- Current implementation only supports key storage in KeyStore
+- Private key stored in **{keystore}.p12**
 - Public key extracted from certificate
-- The consumer can directly pass Keystore password or it can be read from read from **environment variable**
+- The consumer can directly pass Keystore password, or it can be read from **environment variable**
     - Example: `export KEYSTORE_PASSWORD=mysecurepassword`
 
 ---
@@ -109,10 +110,15 @@ AES payload format:
 
 Encoded as Base64 for safe transmission.
 
+## 🔸 Usage (How to consume this utility)
+
+This utility's usage is depicted in tests under the **client** module.  
+The tests in `src/test/java` in client module act as a code reference on how to consume this utility in an application, once imported as a dependency.
+
 ---
 
 # 🧪 Running Tests
-The client module includes JUnit tests. To run:
+The client module includes JUnit tests under `src/test/java`. To run:
 
 ```
 mvn test
