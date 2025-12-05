@@ -70,6 +70,24 @@ The project depends on a **PKCS#12 keystore (`keystore.p12`)** which the consume
 
 **For reference -**
 
+To create the keystore from private key and certificate pem:
+```
+openssl pkcs12 -export
+   -inkey private-key.pem
+   -in x509-cert.pem
+   -name alias-name
+   -out keystore.p12
+```
+
+To create a x509 certificate (containing public key) from private key pem with certificate name as **test-cert** with a validity of **365 days**:
+```
+openssl req -new -x509
+  -key private-key.pem
+  -out x509-cert.pem
+  -days 365
+  -subj "/CN=test-cert"
+```
+
 To view the keystore:
 ```
 keytool -list -v -keystore keystore.p12 -storetype PKCS12
