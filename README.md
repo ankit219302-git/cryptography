@@ -146,9 +146,9 @@ mvn test
 
 # 🛡 Security Notes
 
-- **Do not commit your keystore** to version control.
+- **Do not commit your keystore** (used in user app - consumer) to version control.
 - Set the keystore password using **environment variables** or in a safe storage.
-- Never reuse AES-GCM IVs with the same key.
+- AES-GCM IVs are never reused with the same key.
 - Use RSA only for **small secrets**, not bulk data.
 - Use AES-GCM for full payload encryption with integrity protection.
 
