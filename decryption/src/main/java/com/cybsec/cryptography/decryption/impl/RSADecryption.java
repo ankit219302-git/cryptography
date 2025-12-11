@@ -13,13 +13,11 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.MGF1ParameterSpec;
-import java.util.Arrays;
+import java.util.Base64;
 
 public class RSADecryption implements Decryption {
-    private static final String RSA_OAEP_TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
-
     /**
-     * Function used to decrypt data using RSA cryptography
+     * Function used to decrypt data using RSA cryptography.
      * @param data Data to be decrypted
      * @param privateKey Private key to be used for decryption
      * @return Decrypted data
@@ -31,11 +29,13 @@ public class RSADecryption implements Decryption {
      * @throws BadPaddingException thrown when decryption fails due to incorrect padding
      */
     @Override
-    public String decrypt(String data, Key privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = Cipher.getInstance(RSA_OAEP_TRANSFORMATION);
+    public String decrypt(String data, Key privateKey)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(RSA_OAEP_ALGORITHM);
         OAEPParameterSpec oaepParams = new OAEPParameterSpec(
                 "SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
         cipher.init(Cipher.DECRYPT_MODE, privateKey, oaepParams);
-        return Arrays.toString(cipher.doFinal(data.getBytes()));
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(data));
+        return new String(decryptedBytes);
     }
 }

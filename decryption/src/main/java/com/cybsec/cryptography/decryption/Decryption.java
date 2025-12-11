@@ -9,5 +9,9 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 public interface Decryption {
+    String RSA_OAEP_ALGORITHM = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
+    String AES_ALGORITHM = "AES";
+    String AES_GCM_ALGORITHM = "AES/GCM/NoPadding";
+
     String decrypt(String data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
 }

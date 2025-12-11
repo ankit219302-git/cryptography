@@ -16,10 +16,8 @@ import java.security.spec.MGF1ParameterSpec;
 import java.util.Base64;
 
 public class RSAEncryption implements Encryption {
-    private static final String RSA_OAEP_TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
-
     /**
-     * Function used to encrypt data using RSA cryptography
+     * Function used to encrypt data using RSA cryptography.
      * @param data Data to be encrypted
      * @param publicKey Public key to be used for encryption
      * @return Encrypted data
@@ -32,8 +30,8 @@ public class RSAEncryption implements Encryption {
      */
     @Override
     public String encrypt(String data, Key publicKey)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
-        Cipher cipher = Cipher.getInstance(RSA_OAEP_TRANSFORMATION);
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(RSA_OAEP_ALGORITHM);
         OAEPParameterSpec oaepParameterSpec = new OAEPParameterSpec(
                 "SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey, oaepParameterSpec);

@@ -8,14 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
+import static com.cybsec.cryptography.client.util.CryptoUtil.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+
 public class KeyStoreUtil {
-    private static final String KEYSTORE_TYPE = "PKCS12";
-    private static final String KEYSTORE_PASS_VAR = "KEYSTORE_PASSWORD";
+    private static final String DEFAULT_KEYSTORE_TYPE = "PKCS12";
+    private static final String DEFAULT_KEYSTORE_PASS_VAR = "KEYSTORE_PASSWORD";
 
     /**
      * Function to create a new empty PKCS12 keystore.
@@ -30,7 +31,7 @@ public class KeyStoreUtil {
         if (StringUtils.isBlank(keyStorePassword)) {
             throw new IllegalArgumentException("Invalid keystore password");
         }
-        KeyStore ks = KeyStore.getInstance(KEYSTORE_TYPE);
+        KeyStore ks = KeyStore.getInstance(DEFAULT_KEYSTORE_TYPE);
         Path ksPath = Path.of(keyStoreFilePath);
         if (Files.exists(ksPath)) {
             throw new IllegalArgumentException("Keystore already exists at: " + keyStoreFilePath);
@@ -54,7 +55,7 @@ public class KeyStoreUtil {
         if (StringUtils.isBlank(keyStorePassword)) {
             throw new IllegalArgumentException("Invalid keystore password");
         }
-        KeyStore ks = KeyStore.getInstance(KEYSTORE_TYPE);
+        KeyStore ks = KeyStore.getInstance(DEFAULT_KEYSTORE_TYPE);
         Path ksPath = Path.of(keyStoreFilePath);
         if (Files.exists(ksPath)) {
             try (InputStream in = Files.newInputStream(ksPath)) {
@@ -102,11 +103,99 @@ public class KeyStoreUtil {
      * @return Keystore password
      */
     public static String getKeyStorePassFromEnvVars(String keyStorePassVariable) {
-        keyStorePassVariable = StringUtils.isBlank(keyStorePassVariable) ? KEYSTORE_PASS_VAR : keyStorePassVariable;
+        keyStorePassVariable = StringUtils.isBlank(keyStorePassVariable) ? DEFAULT_KEYSTORE_PASS_VAR : keyStorePassVariable;
         String ksPassword = System.getenv(keyStorePassVariable);
         if (StringUtils.isBlank(ksPassword)) {
-            throw new IllegalArgumentException("Environment variable '" + keyStorePassVariable + "' is not set");
+            throw new IllegalArgumentException("Environment variable '" + keyStorePassVariable + "' not set");
         }
         return ksPassword;
+    }
+
+    /**
+     * Function to fetch private key from the specified PKCS12 keystore.
+     * @param keyStoreFilePath Keystore file path
+     * @param keyStorePassword Keystore password
+     * @param alias Key alias
+     * @return Private Key
+     */
+    public static PrivateKey getPrivateKey(String keyStoreFilePath, String keyStorePassword, String alias) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+        if (StringUtils.isBlank(alias)) {
+            throw new IllegalArgumentException("Invalid alias");
+        }
+        KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword);
+        if (!ks.containsAlias(alias)) {
+            throw new IllegalArgumentException("Alias '" + alias + "' not found in keystore");
+        }
+        Key key = ks.getKey(alias, keyStorePassword.toCharArray());
+        if (!(key instanceof PrivateKey privateKey)) {
+            throw new IllegalArgumentException("Alias does not contain a private key");
+        }
+        return privateKey;
+    }
+
+    /**
+     * Function to fetch public key from the specified PKCS12 keystore.
+     * @param keyStoreFilePath Keystore file path
+     * @param keyStorePassword Keystore password
+     * @param alias Key alias
+     * @return Public Key
+     */
+    public static PublicKey getPublicKey(String keyStoreFilePath, String keyStorePassword, String alias) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
+        if (StringUtils.isBlank(alias)) {
+            throw new IllegalArgumentException("Invalid alias");
+        }
+        KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword);
+        Certificate cert = ks.getCertificate(alias);
+        if (cert == null) {
+            throw new IllegalArgumentException("Alias '" + alias + "' does not contain a certificate/public key");
+        }
+        return cert.getPublicKey();
+    }
+
+    /**
+     * Function to fetch Secret key from the specified PKCS12 keystore.
+     * @param keyStoreFilePath Keystore file path
+     * @param keyStorePassword Keystore password
+     * @param alias Key alias
+     * @return Secret Key
+     */
+    public static SecretKey getSecretKey(String keyStoreFilePath, String keyStorePassword, String alias) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException, UnrecoverableKeyException {
+        if (StringUtils.isBlank(alias)) {
+            throw new IllegalArgumentException("Invalid alias");
+        }
+        KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword);
+        Key key = ks.getKey(alias, keyStorePassword.toCharArray());
+        if (key == null) {
+            throw new IllegalArgumentException("No key found for alias: " + alias);
+        }
+        if (!(key instanceof SecretKey secretKey)) {
+            throw new IllegalArgumentException("Alias does not contain a secret key");
+        }
+        return secretKey;
+    }
+
+    /**
+     * Function to fetch AES key from the specified PKCS12 keystore.
+     * @param keyStoreFilePath Keystore file path
+     * @param keyStorePassword Keystore password
+     * @param alias Key alias
+     * @return AES Key
+     */
+    public static SecretKey getAesKey(String keyStoreFilePath, String keyStorePassword, String alias) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException, UnrecoverableKeyException {
+        if (StringUtils.isBlank(alias)) {
+            throw new IllegalArgumentException("Invalid alias");
+        }
+        KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword);
+        Key key = ks.getKey(alias, keyStorePassword.toCharArray());
+        if (key == null) {
+            throw new IllegalArgumentException("No key found for alias: " + alias);
+        }
+        if (!(key instanceof SecretKey secretKey)) {
+            throw new IllegalArgumentException("Alias does not contain a secret key");
+        }
+        if (!DEFAULT_SYMMETRIC_CRYPTOGRAPHY.equalsIgnoreCase(secretKey.getAlgorithm())) {
+            throw new IllegalArgumentException("Alias '" + alias + "' does not contain an AES key");
+        }
+        return secretKey;
     }
 }

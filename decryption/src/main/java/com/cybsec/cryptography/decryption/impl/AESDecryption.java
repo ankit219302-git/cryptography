@@ -6,21 +6,32 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-//import static com.cybsec.cryptography.decryption.util.DecryptionUtil.AES;
-//
-//public class AESDecryption implements Decryption {
-//    @Override
-//    public String decrypt(String data, String key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-//        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), AES);
-//        Cipher cipher = Cipher.getInstance(AES);
-//        cipher.init(Cipher.DECRYPT_MODE, keySpec);
-//        //byte[] decryptedBytes = cipher.doFinal(payload.getBytes());
-//        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(data));
-//        return new String(decryptedBytes);
-//    }
-//}
+public class AESDecryption implements Decryption {
+    /**
+     * Function used to decrypt data using AES cryptography.
+     * @param data Data to be decrypted
+     * @param aesKey AES key to be used for decryption
+     * @return Decrypted data
+     * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
+     * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect
+     * @throws InvalidKeyException thrown when the AES key is invalid
+     * @throws IllegalBlockSizeException thrown when decryption fails due to incorrect block size
+     * @throws BadPaddingException thrown when decryption fails due to incorrect padding
+     */
+    @Override
+    public String decrypt(String data, Key aesKey)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        if (!AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm())) {
+            throw new IllegalArgumentException("Invalid key used for decryption. AES key required.");
+        }
+        Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, aesKey);
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(data));
+        return new String(decryptedBytes);
+    }
+}
