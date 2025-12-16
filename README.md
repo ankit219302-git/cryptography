@@ -7,8 +7,8 @@ A modular Java-based cryptography system implementing secure **RSA-OAEP** for as
 ```
 cryptography/
 │
-├── encryption/      → Contains AES-GCM and RSA-OAEP encryption utilities
-├── decryption/      → Contains AES-GCM and RSA-OAEP decryption utilities
+├── encryption/      → Contains AES and RSA encryption utilities
+├── decryption/      → Contains AES and RSA decryption utilities
 └── client/          → Client module to be consumed for using encryption/decryption functionalities
 ```
 
