@@ -17,7 +17,7 @@ import java.util.Base64;
 
 public class RSAEncryption implements Encryption {
     /**
-     * Function used to encrypt data using RSA cryptography.
+     * Encrypt data using RSA cryptography.
      * @param data Data to be encrypted
      * @param publicKey Public key to be used for encryption
      * @return Encrypted data

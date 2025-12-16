@@ -28,7 +28,7 @@ public class CryptoUtil {
     }
 
     /**
-     * Function to fetch AES key from the specified key file.
+     * Fetch AES key from the specified key file.
      * @param aesKeyFilePath AES key file path
      * @return AES Key
      */

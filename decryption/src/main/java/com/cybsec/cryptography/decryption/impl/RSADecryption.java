@@ -17,7 +17,7 @@ import java.util.Base64;
 
 public class RSADecryption implements Decryption {
     /**
-     * Function used to decrypt data using RSA cryptography.
+     * Decrypt data using RSA cryptography.
      * @param data Data to be decrypted
      * @param privateKey Private key to be used for decryption
      * @return Decrypted data

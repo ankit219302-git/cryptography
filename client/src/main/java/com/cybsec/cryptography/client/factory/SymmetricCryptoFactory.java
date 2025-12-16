@@ -19,7 +19,7 @@ public class SymmetricCryptoFactory implements CryptoFactory {
     }
 
     /**
-     * Function to return encryption object based on symmetric cryptography type.
+     * Get encryption object based on symmetric cryptography type.
      * @return Encryption object
      */
     @Override
@@ -31,7 +31,7 @@ public class SymmetricCryptoFactory implements CryptoFactory {
     }
 
     /**
-     * Function to return decryption object based on symmetric cryptography type.
+     * Get decryption object based on symmetric cryptography type.
      * @return Decryption object
      */
     @Override

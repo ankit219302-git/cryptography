@@ -19,7 +19,7 @@ public class KeyStoreUtil {
     private static final String DEFAULT_KEYSTORE_PASS_VAR = "KEYSTORE_PASSWORD";
 
     /**
-     * Function to create a new empty PKCS12 keystore.
+     * Create a new empty PKCS12 keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @return New keystore data
@@ -43,7 +43,7 @@ public class KeyStoreUtil {
     }
 
     /**
-     * Function to load existing PKCS12 keystore.
+     * Load existing PKCS12 keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @return Existing keystore data
@@ -68,7 +68,7 @@ public class KeyStoreUtil {
     }
 
     /**
-     * Function to save a new/existing keystore to file.
+     * Save a new/existing keystore to file.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param ks New/existing keystore
@@ -80,7 +80,7 @@ public class KeyStoreUtil {
     }
 
     /**
-     * Function to set a new secret key in existing keystore.
+     * Set a new secret key in existing keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param key Secret key to set in keystore
@@ -98,7 +98,7 @@ public class KeyStoreUtil {
     }
 
     /**
-     * Function to get keystore password stored in system environment variables.
+     * Get keystore password stored in system environment variables.
      * @param keyStorePassVariable {Optional} Keystore password variable name to look for in system environment variables.
      * @return Keystore password
      */
@@ -112,7 +112,7 @@ public class KeyStoreUtil {
     }
 
     /**
-     * Function to fetch private key from the specified PKCS12 keystore.
+     * Fetch private key from the specified PKCS12 keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param alias Key alias
@@ -134,7 +134,7 @@ public class KeyStoreUtil {
     }
 
     /**
-     * Function to fetch public key from the specified PKCS12 keystore.
+     * Fetch public key from the specified PKCS12 keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param alias Key alias
@@ -153,7 +153,7 @@ public class KeyStoreUtil {
     }
 
     /**
-     * Function to fetch Secret key from the specified PKCS12 keystore.
+     * Fetch Secret key from the specified PKCS12 keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param alias Key alias
@@ -175,7 +175,7 @@ public class KeyStoreUtil {
     }
 
     /**
-     * Function to fetch AES key from the specified PKCS12 keystore.
+     * Fetch AES key from the specified PKCS12 keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param alias Key alias

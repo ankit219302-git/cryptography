@@ -19,7 +19,7 @@ public class AsymmetricCryptoFactory implements CryptoFactory {
     }
 
     /**
-     * Function to return encryption object based on asymmetric cryptography type.
+     * Get encryption object based on asymmetric cryptography type.
      * @return Encryption object
      */
     @Override
@@ -31,7 +31,7 @@ public class AsymmetricCryptoFactory implements CryptoFactory {
     }
 
     /**
-     * Function to return decryption object based on asymmetric cryptography type.
+     * Get decryption object based on asymmetric cryptography type.
      * @return Decryption object
      */
     @Override

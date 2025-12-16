@@ -13,7 +13,7 @@ import java.util.Base64;
 
 public class AESEncryption implements Encryption {
     /**
-     * Function used to encrypt data using AES cryptography.
+     * Encrypt data using AES cryptography.
      * @param data Data to be encrypted
      * @param aesKey AES key to be used for encryption
      * @return Encrypted data
