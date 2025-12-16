@@ -9,14 +9,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+
+import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_AES_KEY_SIZE_BITS;
+import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.encryption.EncryptionConstants.SECURE_RANDOM;
 
 public class CryptoUtil {
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    public static final int DEFAULT_AES_KEY_SIZE_BITS = 256; // 256-bit key
-    public static final String DEFAULT_SYMMETRIC_CRYPTOGRAPHY = "AES";
-    public static final String DEFAULT_ASYMMETRIC_CRYPTOGRAPHY = "RSA";
-
     /**
      * Generate a new 256-bit AES SecretKey.
      * @return 256-bit AES key

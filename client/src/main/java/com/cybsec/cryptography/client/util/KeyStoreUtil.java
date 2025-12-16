@@ -12,7 +12,7 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
-import static com.cybsec.cryptography.client.util.CryptoUtil.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
 
 public class KeyStoreUtil {
     private static final String DEFAULT_KEYSTORE_TYPE = "PKCS12";
