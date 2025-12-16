@@ -8,7 +8,11 @@ import com.cybsec.cryptography.encryption.impl.RSAEncryption;
 import static com.cybsec.cryptography.client.util.CryptoUtil.DEFAULT_ASYMMETRIC_CRYPTOGRAPHY;
 
 public class AsymmetricCryptoFactory implements CryptoFactory {
-    private String asymmetricCryptoType = DEFAULT_ASYMMETRIC_CRYPTOGRAPHY;
+    private final String asymmetricCryptoType;
+
+    public AsymmetricCryptoFactory() {
+        this.asymmetricCryptoType = DEFAULT_ASYMMETRIC_CRYPTOGRAPHY;
+    }
 
     public AsymmetricCryptoFactory(String type) {
         this.asymmetricCryptoType = type;

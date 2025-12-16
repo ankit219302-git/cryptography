@@ -8,7 +8,11 @@ import com.cybsec.cryptography.encryption.impl.AESEncryption;
 import static com.cybsec.cryptography.client.util.CryptoUtil.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
 
 public class SymmetricCryptoFactory implements CryptoFactory {
-    private String symmetricCryptoType = DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+    private final String symmetricCryptoType;
+
+    public SymmetricCryptoFactory() {
+        this.symmetricCryptoType =  DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+    }
 
     public SymmetricCryptoFactory(String type) {
         this.symmetricCryptoType = type;
