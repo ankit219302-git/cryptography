@@ -2,14 +2,13 @@ package com.cybsec.cryptography.decryption.impl;
 
 import com.cybsec.cryptography.decryption.Decryption;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.*;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
+import static com.cybsec.cryptography.decryption.DecryptionConstants.AES_ALGORITHM;
 
 public class AESDecryption implements Decryption {
     /**
@@ -26,7 +25,7 @@ public class AESDecryption implements Decryption {
     @Override
     public String decrypt(String data, Key aesKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        if (!AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm())) {
+        if (!(aesKey instanceof SecretKey && AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm()))) {
             throw new IllegalArgumentException("Invalid key used for decryption. AES key required.");
         }
         Cipher cipher = Cipher.getInstance(AES_ALGORITHM);

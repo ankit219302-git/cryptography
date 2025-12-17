@@ -12,8 +12,11 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.MGF1ParameterSpec;
 import java.util.Base64;
+
+import static com.cybsec.cryptography.encryption.EncryptionConstants.RSA_OAEP_ALGORITHM;
 
 public class RSAEncryption implements Encryption {
     /**
@@ -31,6 +34,9 @@ public class RSAEncryption implements Encryption {
     @Override
     public String encrypt(String data, Key publicKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        if (!(publicKey instanceof RSAPublicKey)) {
+            throw new IllegalArgumentException("Invalid key used for encryption. RSA public key required.");
+        }
         Cipher cipher = Cipher.getInstance(RSA_OAEP_ALGORITHM);
         OAEPParameterSpec oaepParameterSpec = new OAEPParameterSpec(
                 "SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);

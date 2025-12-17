@@ -2,14 +2,13 @@ package com.cybsec.cryptography.encryption.impl;
 
 import com.cybsec.cryptography.encryption.Encryption;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.*;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
+import static com.cybsec.cryptography.encryption.EncryptionConstants.AES_ALGORITHM;
 
 public class AESEncryption implements Encryption {
     /**
@@ -26,7 +25,7 @@ public class AESEncryption implements Encryption {
     @Override
     public String encrypt(String data, Key aesKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        if (!AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm())) {
+        if (!(aesKey instanceof SecretKey && AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm()))) {
             throw new IllegalArgumentException("Invalid key used for encryption. AES key required.");
         }
         Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
