@@ -9,7 +9,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Base64;
 
 import static com.cybsec.cryptography.decryption.DecryptionConstants.*;
@@ -19,7 +18,7 @@ public class AESDecryption implements Decryption {
 
     /**
      * Decrypt data using IV based AES cryptography with auth tag (AAD) (optional) support.
-     * @param data Base64 encoded encrypted data with IV and AAD tag (optional)
+     * @param data Encrypted data with IV and AAD tag (optional)
      * @param aesKey AES key to be used for decryption
      * @return Decrypted data
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
@@ -29,7 +28,7 @@ public class AESDecryption implements Decryption {
      * @throws BadPaddingException thrown when decryption fails due to incorrect padding
      */
     @Override
-    public String decrypt(String data, Key aesKey)
+    public byte[] decrypt(byte[] data, Key aesKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         if (!(aesKey instanceof SecretKey && AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm()))) {
             throw new IllegalArgumentException("Invalid key used for decryption. AES key required.");
@@ -50,14 +49,14 @@ public class AESDecryption implements Decryption {
             cipher.updateAAD(this.additionalAuthenticatedData);
         }
         try {
-            return Arrays.toString(cipher.doFinal(cipherText));
+            return cipher.doFinal(cipherText);
         } catch (AEADBadTagException e) {
             throw new SecurityException("Invalid authentication tag (data may have been tampered)", e);
         }
     }
 
     @Override
-    public void setAdditionalAuthenticatedData(String data) {
-        this.additionalAuthenticatedData = data.getBytes();
+    public void setAdditionalAuthenticatedData(byte[] data) {
+        this.additionalAuthenticatedData = data;
     }
 }

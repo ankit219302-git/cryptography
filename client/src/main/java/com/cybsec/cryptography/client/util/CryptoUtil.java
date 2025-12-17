@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_AES_KEY_SIZE_BITS;
 import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
@@ -36,5 +37,23 @@ public class CryptoUtil {
         }
         byte[] keyBytes = Files.readAllBytes(Path.of(aesKeyFilePath));
         return new SecretKeySpec(keyBytes, DEFAULT_SYMMETRIC_CRYPTOGRAPHY);
+    }
+
+    /**
+     * Base64 encode byte data to string.
+     * @param data Data to be encoded
+     * @return Base64 encoded string
+     */
+    public static String base64Encode(byte[] data) {
+        return Base64.getEncoder().encodeToString(data);
+    }
+
+    /**
+     * Base64 decode encoded data to byte array.
+     * @param data Base64 encoded data to be decoded
+     * @return Base64 decoded byte array
+     */
+    public static byte[] base64Decode(String data) {
+        return Base64.getDecoder().decode(data);
     }
 }

@@ -14,7 +14,6 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.MGF1ParameterSpec;
-import java.util.Base64;
 
 import static com.cybsec.cryptography.encryption.EncryptionConstants.RSA_OAEP_ALGORITHM;
 
@@ -32,7 +31,7 @@ public class RSAEncryption implements Encryption {
      * @throws BadPaddingException thrown when encryption fails due to incorrect padding
      */
     @Override
-    public String encrypt(String data, Key publicKey)
+    public byte[] encrypt(byte[] data, Key publicKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         if (!(publicKey instanceof RSAPublicKey)) {
             throw new IllegalArgumentException("Invalid key used for encryption. RSA public key required.");
@@ -41,12 +40,11 @@ public class RSAEncryption implements Encryption {
         OAEPParameterSpec oaepParameterSpec = new OAEPParameterSpec(
                 "SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey, oaepParameterSpec);
-        byte[] cipheredBytes = cipher.doFinal(data.getBytes());
-        return Base64.getEncoder().encodeToString(cipheredBytes);
+        return cipher.doFinal(data);
     }
 
     @Override
-    public void setAdditionalAuthenticatedData(String data) {
+    public void setAdditionalAuthenticatedData(byte[] data) {
         throw new UnsupportedOperationException("RSA encryption does not support additional authenticated data.");
     }
 }

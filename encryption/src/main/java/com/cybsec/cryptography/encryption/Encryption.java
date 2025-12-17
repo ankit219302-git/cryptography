@@ -9,6 +9,6 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 public interface Encryption {
-    String encrypt(String data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException;
-    void setAdditionalAuthenticatedData(String data);
+    byte[] encrypt(byte[] data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException;
+    void setAdditionalAuthenticatedData(byte[] data);
 }

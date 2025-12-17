@@ -9,7 +9,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 import static com.cybsec.cryptography.encryption.EncryptionConstants.*;
 
@@ -28,7 +27,7 @@ public class AESEncryption implements Encryption {
      * @throws BadPaddingException thrown when encryption fails due to incorrect padding
      */
     @Override
-    public String encrypt(String data, Key aesKey)
+    public byte[] encrypt(byte[] data, Key aesKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         if (!(aesKey instanceof SecretKey && AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm()))) {
             throw new IllegalArgumentException("Invalid key used for encryption. AES key required.");
@@ -41,17 +40,16 @@ public class AESEncryption implements Encryption {
         if (this.additionalAuthenticatedData != null && this.additionalAuthenticatedData.length > 0) {
             cipher.updateAAD(this.additionalAuthenticatedData);
         }
-        byte[] cipherText = cipher.doFinal(data.getBytes());
+        byte[] cipherText = cipher.doFinal(data);
         // Prepend IV for transport: IV + (ciphertext + AAD auth tag)
-        ByteBuffer bb = ByteBuffer.allocate(iv.length + cipherText.length);
-        bb.put(iv);
-        bb.put(cipherText);
-        byte[] finalCipher = bb.array();
-        return Base64.getEncoder().encodeToString(finalCipher);
+        ByteBuffer finalCipher = ByteBuffer.allocate(iv.length + cipherText.length);
+        finalCipher.put(iv);
+        finalCipher.put(cipherText);
+        return finalCipher.array();
     }
 
     @Override
-    public void setAdditionalAuthenticatedData(String data) {
-        this.additionalAuthenticatedData = data.getBytes();
+    public void setAdditionalAuthenticatedData(byte[] data) {
+        this.additionalAuthenticatedData = data;
     }
 }
