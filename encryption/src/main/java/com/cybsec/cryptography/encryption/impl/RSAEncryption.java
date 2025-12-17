@@ -44,4 +44,9 @@ public class RSAEncryption implements Encryption {
         byte[] cipheredBytes = cipher.doFinal(data.getBytes());
         return Base64.getEncoder().encodeToString(cipheredBytes);
     }
+
+    @Override
+    public void setAdditionalAuthenticatedData(String data) {
+        throw new UnsupportedOperationException("RSA encryption does not support additional authenticated data.");
+    }
 }

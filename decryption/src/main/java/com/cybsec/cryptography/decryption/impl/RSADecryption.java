@@ -14,6 +14,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.MGF1ParameterSpec;
+import java.util.Arrays;
 import java.util.Base64;
 
 import static com.cybsec.cryptography.decryption.DecryptionConstants.RSA_OAEP_ALGORITHM;
@@ -42,6 +43,11 @@ public class RSADecryption implements Decryption {
                 "SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
         cipher.init(Cipher.DECRYPT_MODE, privateKey, oaepParams);
         byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(data));
-        return new String(decryptedBytes);
+        return Arrays.toString(decryptedBytes);
+    }
+
+    @Override
+    public void setAdditionalAuthenticatedData(String data) {
+        throw new UnsupportedOperationException("RSA decryption does not support additional authenticated data.");
     }
 }

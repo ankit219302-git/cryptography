@@ -10,4 +10,5 @@ import java.security.NoSuchAlgorithmException;
 
 public interface Decryption {
     String decrypt(String data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
+    void setAdditionalAuthenticatedData(String data);
 }
