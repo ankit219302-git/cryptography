@@ -18,13 +18,13 @@ Each module has its own source code under `src/main/java`.
 
 # 🔑 Features
 
-### - RSA Encryption (Asymmetric)
+### - RSA Encryption/Decryption (Asymmetric)
 - RSA **2048-bit keypair**
 - **RSA-OAEP with SHA-256 and MGF1** (`RSA/ECB/OAEPWithSHA-256AndMGF1Padding`)
 - Private/Public key extraction from PKCS12 keystore
 - Safe Base64 encoding for transport
 
-### - AES Encryption (Symmetric)
+### - AES Encryption/Decryption (Symmetric)
 - **AES-256 GCM** mode (`AES/GCM/NoPadding`)
 - 12-byte IV (nonce) generation
 - 128-bit authentication tag
@@ -38,7 +38,8 @@ Each module has its own source code under `src/main/java`.
 - Private key stored in **{keystore}.p12**
 - Public key extracted from certificate
 - The consumer can directly pass Keystore password, or it can be read from **environment variable**
-    - Example: `export KEYSTORE_PASSWORD=mysecurepassword`
+    - Example for setting env variable:  
+      `export KEYSTORE_PASSWORD=mysecurepassword`
 
 ---
 
