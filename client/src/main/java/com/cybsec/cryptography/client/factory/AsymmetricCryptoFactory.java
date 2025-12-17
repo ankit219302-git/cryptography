@@ -1,9 +1,9 @@
 package com.cybsec.cryptography.client.factory;
 
-import com.cybsec.cryptography.decryption.Decryption;
-import com.cybsec.cryptography.decryption.impl.RSADecryption;
-import com.cybsec.cryptography.encryption.Encryption;
-import com.cybsec.cryptography.encryption.impl.RSAEncryption;
+import com.cybsec.cryptography.decryption.asymmetric.AsymmetricDecryption;
+import com.cybsec.cryptography.decryption.asymmetric.impl.RSADecryption;
+import com.cybsec.cryptography.encryption.asymmetric.AsymmetricEncryption;
+import com.cybsec.cryptography.encryption.asymmetric.impl.RSAEncryption;
 
 import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_ASYMMETRIC_CRYPTOGRAPHY;
 
@@ -23,7 +23,7 @@ public class AsymmetricCryptoFactory implements CryptoFactory {
      * @return Encryption object
      */
     @Override
-    public Encryption getEncryption() {
+    public AsymmetricEncryption getEncryption() {
         if (DEFAULT_ASYMMETRIC_CRYPTOGRAPHY.equalsIgnoreCase(this.asymmetricCryptoType)) {
             return new RSAEncryption();
         }
@@ -35,7 +35,7 @@ public class AsymmetricCryptoFactory implements CryptoFactory {
      * @return Decryption object
      */
     @Override
-    public Decryption getDecryption() {
+    public AsymmetricDecryption getDecryption() {
         if (DEFAULT_ASYMMETRIC_CRYPTOGRAPHY.equalsIgnoreCase(this.asymmetricCryptoType)) {
             return new RSADecryption();
         }

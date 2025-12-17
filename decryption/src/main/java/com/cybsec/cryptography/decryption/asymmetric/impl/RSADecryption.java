@@ -1,6 +1,6 @@
-package com.cybsec.cryptography.decryption.impl;
+package com.cybsec.cryptography.decryption.asymmetric.impl;
 
-import com.cybsec.cryptography.decryption.Decryption;
+import com.cybsec.cryptography.decryption.asymmetric.AsymmetricDecryption;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -17,7 +17,7 @@ import java.security.spec.MGF1ParameterSpec;
 
 import static com.cybsec.cryptography.decryption.DecryptionConstants.RSA_OAEP_ALGORITHM;
 
-public class RSADecryption implements Decryption {
+public class RSADecryption implements AsymmetricDecryption {
     /**
      * Decrypt data using RSA cryptography.
      * @param data Data to be decrypted
@@ -41,10 +41,5 @@ public class RSADecryption implements Decryption {
                 "SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), PSource.PSpecified.DEFAULT);
         cipher.init(Cipher.DECRYPT_MODE, privateKey, oaepParams);
         return cipher.doFinal(data);
-    }
-
-    @Override
-    public void setAdditionalAuthenticatedData(byte[] data) {
-        throw new UnsupportedOperationException("RSA decryption does not support additional authenticated data.");
     }
 }

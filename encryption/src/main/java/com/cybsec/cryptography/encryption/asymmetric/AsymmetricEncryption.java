@@ -1,4 +1,6 @@
-package com.cybsec.cryptography.decryption;
+package com.cybsec.cryptography.encryption.asymmetric;
+
+import com.cybsec.cryptography.encryption.Encryption;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -8,12 +10,8 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
-public interface Decryption {
-    byte[] decrypt(byte[] data, Key key)
+public interface AsymmetricEncryption extends Encryption {
+    @Override
+    byte[] encrypt(byte[] data, Key publicKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
-
-    default byte[] decrypt(byte[] data, Key key, byte[] additionalAuthenticatedData)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
-        throw new UnsupportedOperationException("Additional Authenticated Data not supported");
-    }
 }

@@ -1,9 +1,9 @@
 package com.cybsec.cryptography.client.factory;
 
-import com.cybsec.cryptography.decryption.Decryption;
-import com.cybsec.cryptography.decryption.impl.AESDecryption;
-import com.cybsec.cryptography.encryption.Encryption;
-import com.cybsec.cryptography.encryption.impl.AESEncryption;
+import com.cybsec.cryptography.decryption.symmetric.SymmetricDecryption;
+import com.cybsec.cryptography.decryption.symmetric.impl.AESDecryption;
+import com.cybsec.cryptography.encryption.symmetric.SymmetricEncryption;
+import com.cybsec.cryptography.encryption.symmetric.impl.AESEncryption;
 
 import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
 
@@ -23,7 +23,7 @@ public class SymmetricCryptoFactory implements CryptoFactory {
      * @return Encryption object
      */
     @Override
-    public Encryption getEncryption() {
+    public SymmetricEncryption getEncryption() {
         if (DEFAULT_SYMMETRIC_CRYPTOGRAPHY.equalsIgnoreCase(this.symmetricCryptoType)) {
             return new AESEncryption();
         }
@@ -35,7 +35,7 @@ public class SymmetricCryptoFactory implements CryptoFactory {
      * @return Decryption object
      */
     @Override
-    public Decryption getDecryption() {
+    public SymmetricDecryption getDecryption() {
         if (DEFAULT_SYMMETRIC_CRYPTOGRAPHY.equalsIgnoreCase(this.symmetricCryptoType)) {
             return new AESDecryption();
         }

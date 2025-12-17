@@ -9,6 +9,11 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 public interface Encryption {
-    byte[] encrypt(byte[] data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException;
-    void setAdditionalAuthenticatedData(byte[] data);
+    byte[] encrypt(byte[] data, Key key)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException;
+
+    default byte[] encrypt(byte[] data, Key key, byte[] additionalAuthenticatedData)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
+        throw new UnsupportedOperationException("Additional Authenticated Data not supported");
+    }
 }
