@@ -18,7 +18,7 @@ public class AESDecryption implements Decryption {
     private byte[] additionalAuthenticatedData;
 
     /**
-     * Decrypt data using AES cryptography.
+     * Decrypt data using IV based AES cryptography with auth tag (AAD) (optional) support.
      * @param data Base64 encoded encrypted data with IV and AAD tag (optional)
      * @param aesKey AES key to be used for decryption
      * @return Decrypted data

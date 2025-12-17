@@ -17,7 +17,7 @@ public class AESEncryption implements Encryption {
     private byte[] additionalAuthenticatedData;
 
     /**
-     * Encrypt data using AES cryptography.
+     * Encrypt data using IV based AES cryptography with auth tag (AAD) (optional) support.
      * @param data Data to be encrypted
      * @param aesKey AES key to be used for encryption
      * @return Encrypted data with IV and AAD tag (optional)
@@ -42,7 +42,7 @@ public class AESEncryption implements Encryption {
             cipher.updateAAD(this.additionalAuthenticatedData);
         }
         byte[] cipherText = cipher.doFinal(data.getBytes());
-        // Prepend IV for transport: IV + (ciphertext + AAD tag)
+        // Prepend IV for transport: IV + (ciphertext + AAD auth tag)
         ByteBuffer bb = ByteBuffer.allocate(iv.length + cipherText.length);
         bb.put(iv);
         bb.put(cipherText);
