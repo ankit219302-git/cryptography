@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.cybsec.cryptography</groupId>
-    <artifactId>client</artifactId>
+    <artifactId>cryptography-client</artifactId>
     <!-- This is default: <packaging>jar</packaging>, and need not be defined explicitly when jar packaging is needed -->
 
     <properties>
