@@ -50,7 +50,7 @@ public class CryptoUtil {
 
     /**
      * Base64 decode encoded data to byte array.
-     * @param data Base64 encoded data to be decoded
+     * @param data Data to be decoded
      * @return Base64 decoded byte array
      */
     public static byte[] base64Decode(String data) {
