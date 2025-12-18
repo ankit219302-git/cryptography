@@ -59,7 +59,7 @@ public class AESEncryption implements SymmetricEncryption {
             cipher.updateAAD(additionalAuthenticatedData);
         }
         byte[] cipherText = cipher.doFinal(data);
-        // Prepend IV for transport: IV + (ciphertext + AAD auth tag (if present))
+        // Prepend IV for transport: IV | (ciphertext + AAD auth tag (if present))
         ByteBuffer finalCipher = ByteBuffer.allocate(iv.length + cipherText.length);
         finalCipher.put(iv);
         finalCipher.put(cipherText);
