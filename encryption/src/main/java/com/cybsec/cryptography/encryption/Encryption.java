@@ -14,6 +14,6 @@ public interface Encryption {
 
     default byte[] encrypt(byte[] data, Key key, byte[] additionalAuthenticatedData)
             throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
-        throw new UnsupportedOperationException("Additional Authenticated Data not supported");
+        throw new UnsupportedOperationException("Additional Authenticated Data (AAD) not supported");
     }
 }
