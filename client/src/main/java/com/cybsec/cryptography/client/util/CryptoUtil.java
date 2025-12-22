@@ -15,7 +15,9 @@ import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_AES_KEY_SIZ
 import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
 import static com.cybsec.cryptography.encryption.EncryptionConstants.SECURE_RANDOM;
 
-public class CryptoUtil {
+public final class CryptoUtil {
+    private CryptoUtil() {}
+
     /**
      * Generate a new 256-bit AES SecretKey.
      * @return 256-bit AES key
@@ -36,7 +38,9 @@ public class CryptoUtil {
             throw new IllegalArgumentException("Invalid AES key path");
         }
         byte[] keyBytes = Files.readAllBytes(Path.of(aesKeyFilePath));
-        return new SecretKeySpec(keyBytes, DEFAULT_SYMMETRIC_CRYPTOGRAPHY);
+        SecretKey secretKey = new SecretKeySpec(keyBytes, DEFAULT_SYMMETRIC_CRYPTOGRAPHY);
+        PasswordUtil.wipe(keyBytes);
+        return secretKey;
     }
 
     /**

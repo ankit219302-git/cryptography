@@ -21,7 +21,7 @@ Each module has its own source code under `src/main/java`.
 ### - RSA Encryption/Decryption (Asymmetric)
 - RSA **2048-bit keypair**
 - **RSA-OAEP with SHA-256 and MGF1** (`RSA/ECB/OAEPWithSHA-256AndMGF1Padding`)
-- Private/Public key extraction from PKCS12 keystore
+- Private/Public key extraction from keystore
 - Safe Base64 encoding for transport
 
 ### - AES Encryption/Decryption (Symmetric)
@@ -33,7 +33,7 @@ Each module has its own source code under `src/main/java`.
 - Safe Base64 encoding for transport
 
 
-### - Key Storage (PKCS12) 
+### - Key Storage (e.g. PKCS12) 
 - Current implementation only supports key storage in KeyStore
 - Private key stored in **{keystore}.p12**
 - Public key extracted from certificate
@@ -65,7 +65,7 @@ export KEYSTORE_PASSWORD=yourpassword
 
 # 🔑 Keystore Setup
 
-The project depends on a **PKCS#12 keystore (`keystore.p12`)** which the consumer needs to provide. This keystore should contain:
+The project depends on a **keystore (like PKCS12) (`keystore.p12`)** which the consumer needs to provide. This keystore should contain:
 - RSA private key
 - X.509 certificate (contains the public key)
 
