@@ -12,7 +12,7 @@ public final class PasswordUtil {
      * @param chars character array
      * @return true if char array is null, empty or whitespaces, else, returns false
      */
-    public static boolean isNullOrBlank(char[] chars) {
+    public static boolean isBlank(char[] chars) {
         if (chars == null) {
             return true;
         }
@@ -29,7 +29,7 @@ public final class PasswordUtil {
      * @param chars character array
      * @return true if char array is null or empty, else, returns false
      */
-    public static boolean isNullOrEmpty(char[] chars) {
+    public static boolean isEmpty(char[] chars) {
         return chars == null || chars.length == 0;
     }
 
@@ -81,6 +81,7 @@ public final class PasswordUtil {
         char[] chars = value.toCharArray();
         // Clear the String reference to prevent exploiting stored sensitive string
         value = null;
+        envVar = null;
         return chars;
     }
 

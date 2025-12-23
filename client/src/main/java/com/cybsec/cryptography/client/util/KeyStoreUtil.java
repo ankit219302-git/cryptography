@@ -45,7 +45,7 @@ public final class KeyStoreUtil {
         if (keyStoreFilePath == null) {
             throw new IllegalArgumentException("Invalid keystore path");
         }
-        if (PasswordUtil.isNullOrBlank(keyStorePassword)) {
+        if (PasswordUtil.isBlank(keyStorePassword)) {
             throw new IllegalArgumentException("Invalid keystore password");
         }
         if (StringUtils.isBlank(keyStoreType)) {
@@ -86,7 +86,7 @@ public final class KeyStoreUtil {
         if (StringUtils.isBlank(keyStoreFilePath)) {
             throw new IllegalArgumentException("Invalid keystore path");
         }
-        if (PasswordUtil.isNullOrBlank(keyStorePassword)) {
+        if (PasswordUtil.isBlank(keyStorePassword)) {
             throw new IllegalArgumentException("Invalid keystore password");
         }
         if (StringUtils.isBlank(keyStoreType)) {
@@ -160,7 +160,7 @@ public final class KeyStoreUtil {
             keyStorePassVariable = DEFAULT_KEYSTORE_PASS_VAR;
         }
         char[] ksPassword = PasswordUtil.getFromEnv(keyStorePassVariable);
-        if (PasswordUtil.isNullOrBlank(ksPassword)) {
+        if (PasswordUtil.isBlank(ksPassword)) {
             throw new IllegalArgumentException("Environment variable '" + keyStorePassVariable + "' not set");
         }
         return ksPassword;
