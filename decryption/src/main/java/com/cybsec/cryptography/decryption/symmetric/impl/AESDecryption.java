@@ -9,7 +9,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 import static com.cybsec.cryptography.decryption.DecryptionConstants.*;
 
@@ -51,11 +50,11 @@ public class AESDecryption implements SymmetricDecryption {
         if (!(aesKey instanceof SecretKey && AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm()))) {
             throw new IllegalArgumentException("Invalid key used for decryption. AES key required.");
         }
-        byte[] ivAndCipher = Base64.getDecoder().decode(data);
-        if (ivAndCipher.length < GCM_IV_LENGTH_BYTES + 1) {
+        //data contains IV + cipher
+        if (data.length < GCM_IV_LENGTH_BYTES + 1) {
             throw new IllegalArgumentException("Invalid payload passed for decryption");
         }
-        ByteBuffer bb = ByteBuffer.wrap(ivAndCipher);
+        ByteBuffer bb = ByteBuffer.wrap(data);
         byte[] iv = new byte[GCM_IV_LENGTH_BYTES];
         bb.get(iv);
         byte[] cipherText = new byte[bb.remaining()];

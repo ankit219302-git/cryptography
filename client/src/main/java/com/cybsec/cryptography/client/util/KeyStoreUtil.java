@@ -29,9 +29,7 @@ public final class KeyStoreUtil {
      * @return New PKCS12 keystore
      */
     public static KeyStore createPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {
-        KeyStore keyStore = createKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE);
-        PasswordUtil.wipe(keyStorePassword);
-        return keyStore;
+        return createKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE);
     }
 
     /**
@@ -59,7 +57,6 @@ public final class KeyStoreUtil {
             ks.load(null, null); // Create empty PKCS12
         }
         saveKeyStore(keyStoreFilePath, keyStorePassword, ks);
-        PasswordUtil.wipe(keyStorePassword);
         return ks;
     }
 
@@ -70,9 +67,7 @@ public final class KeyStoreUtil {
      * @return Existing PKCS12 keystore
      */
     public static KeyStore loadPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
-        KeyStore keyStore = loadKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE);
-        PasswordUtil.wipe(keyStorePassword);
-        return keyStore;
+        return loadKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE);
     }
 
     /**
@@ -127,7 +122,6 @@ public final class KeyStoreUtil {
      */
     public static void setSecretKeyEntryInPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword, SecretKey key, String alias) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException {
         setSecretKeyEntryInKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, key, alias);
-        PasswordUtil.wipe(keyStorePassword);
     }
 
     /**
@@ -142,12 +136,13 @@ public final class KeyStoreUtil {
         if (StringUtils.isBlank(alias)) {
             throw new IllegalArgumentException("Invalid alias");
         }
-        KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
         KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry(key);
         KeyStore.ProtectionParameter param = new KeyStore.PasswordProtection(keyStorePassword);
+        char[] ksPass = PasswordUtil.clone(keyStorePassword);
+        KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
         ks.setEntry(alias, entry, param);
-        saveKeyStore(keyStoreFilePath, keyStorePassword, ks);
-        PasswordUtil.wipe(keyStorePassword);
+        saveKeyStore(keyStoreFilePath, ksPass, ks);
+        PasswordUtil.wipe(ksPass);
     }
 
     /**
@@ -163,6 +158,7 @@ public final class KeyStoreUtil {
         if (PasswordUtil.isBlank(ksPassword)) {
             throw new IllegalArgumentException("Environment variable '" + keyStorePassVariable + "' not set");
         }
+        keyStorePassVariable = null;
         return ksPassword;
     }
 
@@ -174,9 +170,7 @@ public final class KeyStoreUtil {
      * @return RSA Private Key
      */
     public static RSAPrivateKey getRSAPrivateKeyFromPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword, String alias) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-        RSAPrivateKey privateKey = getRSAPrivateKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
-        PasswordUtil.wipe(keyStorePassword);
-        return privateKey;
+        return getRSAPrivateKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
     }
 
     /**
@@ -191,15 +185,16 @@ public final class KeyStoreUtil {
         if (StringUtils.isBlank(alias)) {
             throw new IllegalArgumentException("Invalid alias");
         }
+        char[] ksPass = PasswordUtil.clone(keyStorePassword);
         KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
         if (!ks.containsAlias(alias)) {
             throw new IllegalArgumentException("Alias '" + alias + "' not found in keystore");
         }
-        Key key = ks.getKey(alias, keyStorePassword);
+        Key key = ks.getKey(alias, ksPass);
         if (!(key instanceof RSAPrivateKey privateKey)) {
             throw new IllegalArgumentException("Alias does not contain RSA private key");
         }
-        PasswordUtil.wipe(keyStorePassword);
+        PasswordUtil.wipe(ksPass);
         return privateKey;
     }
 
@@ -211,9 +206,7 @@ public final class KeyStoreUtil {
      * @return RSA Public Key
      */
     public static RSAPublicKey getRSAPublicKeyFromPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword, String alias) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
-        RSAPublicKey publicKey = getRSAPublicKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
-        PasswordUtil.wipe(keyStorePassword);
-        return publicKey;
+        return getRSAPublicKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
     }
 
     /**
@@ -236,7 +229,6 @@ public final class KeyStoreUtil {
         if (!(cert.getPublicKey() instanceof RSAPublicKey publicKey)) {
             throw new IllegalArgumentException("Alias does not contain RSA public key");
         }
-        PasswordUtil.wipe(keyStorePassword);
         return publicKey;
     }
 
@@ -248,9 +240,7 @@ public final class KeyStoreUtil {
      * @return Secret Key
      */
     public static SecretKey getSecretKeyFromPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword, String alias) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        SecretKey secretKey = getSecretKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
-        PasswordUtil.wipe(keyStorePassword);
-        return secretKey;
+        return getSecretKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
     }
 
     /**
@@ -265,15 +255,16 @@ public final class KeyStoreUtil {
         if (StringUtils.isBlank(alias)) {
             throw new IllegalArgumentException("Invalid alias");
         }
+        char[] ksPass = PasswordUtil.clone(keyStorePassword);
         KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
-        Key key = ks.getKey(alias, keyStorePassword);
+        Key key = ks.getKey(alias, ksPass);
         if (key == null) {
             throw new IllegalArgumentException("No secret key found for alias: " + alias);
         }
         if (!(key instanceof SecretKey secretKey)) {
             throw new IllegalArgumentException("Alias does not contain a secret key");
         }
-        PasswordUtil.wipe(keyStorePassword);
+        PasswordUtil.wipe(ksPass);
         return secretKey;
     }
 
@@ -285,9 +276,7 @@ public final class KeyStoreUtil {
      * @return AES Key
      */
     public static SecretKey getAesKeyFromPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword, String alias) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        SecretKey secretKey = getAesKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
-        PasswordUtil.wipe(keyStorePassword);
-        return secretKey;
+        return getAesKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
     }
 
     /**
@@ -303,7 +292,6 @@ public final class KeyStoreUtil {
         if (!DEFAULT_SYMMETRIC_CRYPTOGRAPHY.equalsIgnoreCase(secretKey.getAlgorithm())) {
             throw new IllegalArgumentException("Alias '" + alias + "' does not contain an AES key");
         }
-        PasswordUtil.wipe(keyStorePassword);
         return secretKey;
     }
 }

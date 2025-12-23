@@ -65,6 +65,27 @@ public final class PasswordUtil {
     }
 
     /**
+     * Secure, constant-time comparison of two byte[] values.
+     * Used for comparing sensitive data and prevent timing attacks.
+     * @param a first byte[]
+     * @param b second byte[]
+     * @return true if both byte arrays match, else, returns false
+     */
+    public static boolean constantTimeEquals(byte[] a, byte[] b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        if (a.length != b.length) {
+            return false;
+        }
+        int result = 0;
+        for (int i = 0; i < a.length; i++) {
+            result |= a[i] ^ b[i];
+        }
+        return result == 0;
+    }
+
+    /**
      * Fetches sensitive data from stored environment variable as char[] and clears the String reference.
      * Returns null if environment variable doesn't exist.
      * @param envVar Environment variable name
@@ -121,5 +142,29 @@ public final class PasswordUtil {
         if (bytes != null) {
             Arrays.fill(bytes, (byte) 0);
         }
+    }
+
+    /**
+     * Clones a char[] defensively. Useful for storing internal copies.
+     * @param chars char[] to copy
+     * @return cloned char[]
+     */
+    public static char[] clone(char[] chars) {
+        if (chars == null) {
+            return null;
+        }
+        return Arrays.copyOf(chars, chars.length);
+    }
+
+    /**
+     * Clones a byte[] defensively. Useful for storing internal copies.
+     * @param bytes byte[] to copy
+     * @return cloned byte[]
+     */
+    public static byte[] clone(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        return Arrays.copyOf(bytes, bytes.length);
     }
 }

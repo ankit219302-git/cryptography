@@ -44,6 +44,19 @@ public final class CryptoUtil {
     }
 
     /**
+     * Fetches data from stored environment variable as String.
+     * NOT TO BE USED for fetching sensitive data.
+     * @param envVar Environment variable name
+     * @return Data as String
+     */
+    public static String getDataFromEnvVars(String envVar) {
+        if (StringUtils.isBlank(envVar)) {
+            throw new IllegalArgumentException("Invalid environment variable");
+        }
+        return System.getenv(envVar);
+    }
+
+    /**
      * Base64 encode byte data to string.
      * @param data Data to be encoded
      * @return Base64 encoded string
