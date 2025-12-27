@@ -1,0 +1,8 @@
+{
+  "sample_msg_recordeed_date": "25/12/2025",
+  "sample_msg_recorded_time": "15:15:00",
+  "sample_user_data_to_encrypt": {
+    "sample_user": "sample42",
+    "sample_pass": "sample42istheanswer"
+  }
+}

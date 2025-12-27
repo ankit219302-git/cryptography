@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.cybsec</groupId>
         <artifactId>cryptography</artifactId>
@@ -11,8 +10,7 @@
     </parent>
 
     <groupId>com.cybsec.cryptography</groupId>
-    <artifactId>encryption</artifactId>
-    <!-- This is default: <packaging>jar</packaging>, and need not be defined explicitly when jar packaging is needed -->
+    <artifactId>cryptography-helper</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -22,10 +20,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.cybsec.cryptography</groupId>
-            <artifactId>cryptography-helper</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope> <!-- This is the default scope and would be fine even if not defined explicitly -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
 

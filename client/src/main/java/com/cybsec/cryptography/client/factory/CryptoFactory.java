@@ -5,5 +5,6 @@ import com.cybsec.cryptography.encryption.Encryption;
 
 public interface CryptoFactory {
     Encryption getEncryption();
+
     Decryption getDecryption();
 }

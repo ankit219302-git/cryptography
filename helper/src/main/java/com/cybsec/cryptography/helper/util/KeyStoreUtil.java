@@ -1,4 +1,4 @@
-package com.cybsec.cryptography.client.util;
+package com.cybsec.cryptography.helper.util;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,7 +14,7 @@ import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
-import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.Constants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
 
 public final class KeyStoreUtil {
     private static final String DEFAULT_KEYSTORE_TYPE = "PKCS12";

@@ -1,4 +1,4 @@
-package com.cybsec.cryptography.client.util;
+package com.cybsec.cryptography.helper.util;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,9 +11,7 @@ import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_AES_KEY_SIZE_BITS;
-import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
-import static com.cybsec.cryptography.encryption.EncryptionConstants.SECURE_RANDOM;
+import static com.cybsec.cryptography.helper.Constants.*;
 
 public final class CryptoUtil {
     private CryptoUtil() {}

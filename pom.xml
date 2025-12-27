@@ -12,6 +12,7 @@
         <module>client</module>
         <module>decryption</module>
         <module>encryption</module>
+        <module>helper</module>
     </modules>
 
     <properties>

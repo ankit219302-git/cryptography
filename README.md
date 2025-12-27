@@ -20,17 +20,19 @@ Each module has its own source code under `src/main/java`.
 
 ### - RSA Encryption/Decryption (Asymmetric)
 - RSA **2048-bit keypair**
-- **RSA-OAEP with SHA-256 and MGF1** (`RSA/ECB/OAEPWithSHA-256AndMGF1Padding`)
+- **RSA-OAEP with SHA-256 and MGF1** mode (`RSA/ECB/OAEPWithSHA-256AndMGF1Padding`)
+- **RSA-OAEP with SHA-1 and MGF1** mode (`RSA/ECB/OAEPWithSHA-1AndMGF1Padding`)
+- **RSA with PKCS1** mode (`RSA/ECB/PKCS1Padding`)
 - Private/Public key extraction from keystore
-- Safe Base64 encoding for transport
+- Safe Base64 encoding support for transport
 
 ### - AES Encryption/Decryption (Symmetric)
 - **AES-256 GCM** mode (`AES/GCM/NoPadding`)
-- 12-byte IV (nonce) generation
-- 128-bit authentication tag
-- AAD (Additional Authenticated Data) support
+- **AES-256 CBC PKCS5** mode (`AES/CBC/PKCS5Padding`)
+- 12/16-byte IV (nonce) generation support
+- 128-bit authentication tag support
 - IV + Ciphertext + Tag packaging 
-- Safe Base64 encoding for transport
+- Safe Base64 encoding support for transport
 
 
 ### - Key Storage (e.g. PKCS12) 

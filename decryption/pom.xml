@@ -20,6 +20,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.cybsec.cryptography</groupId>
+            <artifactId>cryptography-helper</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope> <!-- This is the default scope and would be fine even if not defined explicitly -->
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

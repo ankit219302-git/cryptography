@@ -5,7 +5,7 @@ import com.cybsec.cryptography.decryption.asymmetric.impl.RSADecryption;
 import com.cybsec.cryptography.encryption.asymmetric.AsymmetricEncryption;
 import com.cybsec.cryptography.encryption.asymmetric.impl.RSAEncryption;
 
-import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_ASYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.Constants.DEFAULT_ASYMMETRIC_CRYPTOGRAPHY;
 
 public class AsymmetricCryptoFactory implements CryptoFactory {
     private final String asymmetricCryptoType;

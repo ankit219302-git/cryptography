@@ -34,12 +34,14 @@
             <scope>compile</scope> <!-- This is the default scope and would be fine even if not defined explicitly -->
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <groupId>com.cybsec.cryptography</groupId>
+            <artifactId>cryptography-helper</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope> <!-- This is the default scope and would be fine even if not defined explicitly -->
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
         </dependency>
     </dependencies>
 

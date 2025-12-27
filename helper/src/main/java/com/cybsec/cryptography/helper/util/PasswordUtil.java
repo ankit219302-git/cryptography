@@ -1,4 +1,4 @@
-package com.cybsec.cryptography.client.util;
+package com.cybsec.cryptography.helper.util;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,6 +31,15 @@ public final class PasswordUtil {
      */
     public static boolean isEmpty(char[] chars) {
         return chars == null || chars.length == 0;
+    }
+
+    /**
+     * Checks if a byte[] is null or empty.
+     * @param bytes byte array
+     * @return true if byte array is null or empty, else, returns false
+     */
+    public static boolean isEmpty(byte[] bytes) {
+        return bytes == null || bytes.length == 0;
     }
 
     /**

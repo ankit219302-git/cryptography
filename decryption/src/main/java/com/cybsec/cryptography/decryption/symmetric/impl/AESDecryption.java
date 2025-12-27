@@ -1,22 +1,24 @@
 package com.cybsec.cryptography.decryption.symmetric.impl;
 
 import com.cybsec.cryptography.decryption.symmetric.SymmetricDecryption;
+import com.cybsec.cryptography.helper.transformation.Transformation;
 
 import javax.crypto.*;
-import javax.crypto.spec.GCMParameterSpec;
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.AlgorithmParameterSpec;
 
-import static com.cybsec.cryptography.decryption.DecryptionConstants.*;
+import static com.cybsec.cryptography.helper.Constants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
 
 public class AESDecryption implements SymmetricDecryption {
     /**
      * Decrypt data using IV based AES cryptography.
      * @param data Encrypted data with IV prepended
      * @param aesKey AES key to be used for decryption
+     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
      * @return Decrypted data
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect
@@ -26,9 +28,9 @@ public class AESDecryption implements SymmetricDecryption {
      * @throws InvalidAlgorithmParameterException thrown when algorithm specification used for decryption in invalid
      */
     @Override
-    public byte[] decrypt(byte[] data, Key aesKey)
+    public byte[] decrypt(byte[] data, Key aesKey, Transformation transformation)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-        return decrypt(data, aesKey, null);
+        return decrypt(data, aesKey, null, transformation);
     }
 
     /**
@@ -36,6 +38,7 @@ public class AESDecryption implements SymmetricDecryption {
      * @param data Encrypted data with IV prepended and AAD tag (optional)
      * @param aesKey AES key to be used for decryption
      * @param additionalAuthenticatedData Additional auth data for validating auth tag while decryption
+     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
      * @return Decrypted data
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect
@@ -45,23 +48,30 @@ public class AESDecryption implements SymmetricDecryption {
      * @throws InvalidAlgorithmParameterException thrown when algorithm specification used for decryption in invalid
      */
     @Override
-    public byte[] decrypt(byte[] data, Key aesKey, byte[] additionalAuthenticatedData)
+    public byte[] decrypt(byte[] data, Key aesKey, byte[] additionalAuthenticatedData, Transformation transformation)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        if (!(aesKey instanceof SecretKey && AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm()))) {
+        if (!(aesKey instanceof SecretKey && DEFAULT_SYMMETRIC_CRYPTOGRAPHY.equalsIgnoreCase(aesKey.getAlgorithm()))) {
             throw new IllegalArgumentException("Invalid key used for decryption. AES key required.");
         }
+        if (additionalAuthenticatedData != null && !transformation.supportsAad()) {
+            throw new IllegalArgumentException("AAD not supported for AES transformation: " + transformation);
+        }
         //data contains IV + cipher
-        if (data.length < GCM_IV_LENGTH_BYTES + 1) {
+        if (data.length < transformation.getIvLengthBytes() + 1) {
             throw new IllegalArgumentException("Invalid payload passed for decryption");
         }
         ByteBuffer bb = ByteBuffer.wrap(data);
-        byte[] iv = new byte[GCM_IV_LENGTH_BYTES];
+        byte[] iv = new byte[transformation.getIvLengthBytes()];
         bb.get(iv);
         byte[] cipherText = new byte[bb.remaining()];
         bb.get(cipherText);
-        Cipher cipher = Cipher.getInstance(AES_GCM_ALGORITHM);
-        GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH_BITS, iv);
-        cipher.init(Cipher.DECRYPT_MODE, aesKey, spec);
+        Cipher cipher = Cipher.getInstance(transformation.getAlgorithm());
+        AlgorithmParameterSpec spec = transformation.getParameterSpec(iv);
+        if (spec != null) {
+            cipher.init(Cipher.DECRYPT_MODE, aesKey, spec);
+        } else {
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+        }
         if (additionalAuthenticatedData != null && additionalAuthenticatedData.length > 0) {
             cipher.updateAAD(additionalAuthenticatedData);
         }

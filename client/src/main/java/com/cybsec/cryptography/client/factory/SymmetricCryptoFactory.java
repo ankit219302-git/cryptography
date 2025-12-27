@@ -5,7 +5,7 @@ import com.cybsec.cryptography.decryption.symmetric.impl.AESDecryption;
 import com.cybsec.cryptography.encryption.symmetric.SymmetricEncryption;
 import com.cybsec.cryptography.encryption.symmetric.impl.AESEncryption;
 
-import static com.cybsec.cryptography.client.CryptoConstants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.Constants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
 
 public class SymmetricCryptoFactory implements CryptoFactory {
     private final String symmetricCryptoType;

@@ -1,22 +1,25 @@
 package com.cybsec.cryptography.encryption.symmetric.impl;
 
 import com.cybsec.cryptography.encryption.symmetric.SymmetricEncryption;
+import com.cybsec.cryptography.helper.transformation.Transformation;
 
 import javax.crypto.*;
-import javax.crypto.spec.GCMParameterSpec;
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.AlgorithmParameterSpec;
 
-import static com.cybsec.cryptography.encryption.EncryptionConstants.*;
+import static com.cybsec.cryptography.helper.Constants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.Constants.SECURE_RANDOM;
 
 public class AESEncryption implements SymmetricEncryption {
     /**
      * Encrypt data using IV based AES cryptography.
      * @param data Data to be encrypted
      * @param aesKey AES key to be used for encryption
+     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
      * @return Encrypted data with IV prepended
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect
@@ -26,9 +29,9 @@ public class AESEncryption implements SymmetricEncryption {
      * @throws InvalidAlgorithmParameterException thrown when algorithm specification used for encryption in invalid
      */
     @Override
-    public byte[] encrypt(byte[] data, Key aesKey)
+    public byte[] encrypt(byte[] data, Key aesKey, Transformation transformation)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-        return encrypt(data, aesKey, null);
+        return encrypt(data, aesKey, null, transformation);
     }
 
     /**
@@ -36,6 +39,7 @@ public class AESEncryption implements SymmetricEncryption {
      * @param data Data to be encrypted
      * @param aesKey AES key to be used for encryption
      * @param additionalAuthenticatedData Additional auth data for adding auth tag to encryption
+     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
      * @return Encrypted data with IV prepended and AAD tag (optional)
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect
@@ -45,16 +49,23 @@ public class AESEncryption implements SymmetricEncryption {
      * @throws InvalidAlgorithmParameterException thrown when algorithm specification used for encryption in invalid
      */
     @Override
-    public byte[] encrypt(byte[] data, Key aesKey, byte[] additionalAuthenticatedData)
+    public byte[] encrypt(byte[] data, Key aesKey, byte[] additionalAuthenticatedData, Transformation transformation)
             throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
-        if (!(aesKey instanceof SecretKey && AES_ALGORITHM.equalsIgnoreCase(aesKey.getAlgorithm()))) {
+        if (!(aesKey instanceof SecretKey && DEFAULT_SYMMETRIC_CRYPTOGRAPHY.equalsIgnoreCase(aesKey.getAlgorithm()))) {
             throw new IllegalArgumentException("Invalid key used for encryption. AES key required.");
         }
-        byte[] iv = new byte[GCM_IV_LENGTH_BYTES];
+        if (additionalAuthenticatedData != null && !transformation.supportsAad()) {
+            throw new IllegalArgumentException("AAD not supported for AES transformation: " + transformation);
+        }
+        byte[] iv = new byte[transformation.getIvLengthBytes()];
         SECURE_RANDOM.nextBytes(iv); // random nonce
-        Cipher cipher = Cipher.getInstance(AES_GCM_ALGORITHM);
-        GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH_BITS, iv);
-        cipher.init(Cipher.ENCRYPT_MODE, aesKey, spec);
+        Cipher cipher = Cipher.getInstance(transformation.getAlgorithm());
+        AlgorithmParameterSpec spec = transformation.getParameterSpec(iv);
+        if (spec != null) {
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey, spec);
+        } else {
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+        }
         if (additionalAuthenticatedData != null && additionalAuthenticatedData.length > 0) {
             cipher.updateAAD(additionalAuthenticatedData);
         }
