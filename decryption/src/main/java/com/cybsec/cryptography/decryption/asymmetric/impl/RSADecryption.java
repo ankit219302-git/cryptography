@@ -18,7 +18,7 @@ public class RSADecryption implements AsymmetricDecryption {
      * Decrypt data using RSA cryptography.
      * @param data Data to be decrypted
      * @param privateKey Private key to be used for decryption
-     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
+     * @param transformation Transformation enum
      * @return Decrypted data
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect

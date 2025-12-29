@@ -19,7 +19,7 @@ public class AESEncryption implements SymmetricEncryption {
      * Encrypt data using IV based AES cryptography.
      * @param data Data to be encrypted
      * @param aesKey AES key to be used for encryption
-     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
+     * @param transformation Transformation enum
      * @return Encrypted data with IV prepended
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect
@@ -39,7 +39,7 @@ public class AESEncryption implements SymmetricEncryption {
      * @param data Data to be encrypted
      * @param aesKey AES key to be used for encryption
      * @param additionalAuthenticatedData Additional auth data for adding auth tag to encryption
-     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
+     * @param transformation Transformation enum
      * @return Encrypted data with IV prepended and AAD tag (optional)
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect

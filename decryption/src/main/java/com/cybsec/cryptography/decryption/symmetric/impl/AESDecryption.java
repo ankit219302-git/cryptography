@@ -18,7 +18,7 @@ public class AESDecryption implements SymmetricDecryption {
      * Decrypt data using IV based AES cryptography.
      * @param data Encrypted data with IV prepended
      * @param aesKey AES key to be used for decryption
-     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
+     * @param transformation Transformation enum
      * @return Decrypted data
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect
@@ -38,7 +38,7 @@ public class AESDecryption implements SymmetricDecryption {
      * @param data Encrypted data with IV prepended and AAD tag (optional)
      * @param aesKey AES key to be used for decryption
      * @param additionalAuthenticatedData Additional auth data for validating auth tag while decryption
-     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
+     * @param transformation Transformation enum
      * @return Decrypted data
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect

@@ -18,7 +18,7 @@ public class RSAEncryption implements AsymmetricEncryption {
      * Encrypt data using RSA cryptography.
      * @param data Data to be encrypted
      * @param publicKey Public key to be used for encryption
-     * @param transformation Transformation enum containing transformation algorithm and algorithm parameter spec
+     * @param transformation Transformation enum
      * @return Encrypted data
      * @throws NoSuchPaddingException thrown when provided transformation to create Cipher instance is incorrect
      * @throws NoSuchAlgorithmException thrown when provided transformation to create Cipher instance is incorrect
