@@ -191,6 +191,9 @@ public final class KeyStoreUtil {
             throw new IllegalArgumentException("Alias '" + alias + "' not found in keystore");
         }
         Key key = ks.getKey(alias, ksPass);
+        if (key == null) {
+            throw new IllegalArgumentException("Keystore does not contain RSA private key with alias '" + alias + "'");
+        }
         if (!(key instanceof RSAPrivateKey privateKey)) {
             throw new IllegalArgumentException("Alias does not contain RSA private key");
         }
@@ -224,12 +227,43 @@ public final class KeyStoreUtil {
         KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
         Certificate cert = ks.getCertificate(alias);
         if (cert == null) {
-            throw new IllegalArgumentException("Alias '" + alias + "' does not contain a RSA public key");
+            throw new IllegalArgumentException("Keystore does not contain RSA public key with alias '" + alias + "'");
         }
         if (!(cert.getPublicKey() instanceof RSAPublicKey publicKey)) {
             throw new IllegalArgumentException("Alias does not contain RSA public key");
         }
         return publicKey;
+    }
+
+    /**
+     * Fetch certificate from PKCS12 keystore.
+     * @param keyStoreFilePath Keystore file path
+     * @param keyStorePassword Keystore password
+     * @param alias Key alias
+     * @return Certificate
+     */
+    public static Certificate getCertificateFromPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword, String alias) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
+        return getCertificateFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
+    }
+
+    /**
+     * Fetch certificate from the specified keystore.
+     * @param keyStoreFilePath Keystore file path
+     * @param keyStorePassword Keystore password
+     * @param keyStoreType Keystore type (Default PKCS12, if null or empty)
+     * @param alias Key alias
+     * @return Certificate
+     */
+    public static Certificate getCertificateFromKeyStore(String keyStoreFilePath, char[] keyStorePassword, String keyStoreType, String alias) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
+        if (StringUtils.isBlank(alias)) {
+            throw new IllegalArgumentException("Invalid alias");
+        }
+        KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
+        Certificate cert = ks.getCertificate(alias);
+        if (cert == null) {
+            throw new IllegalArgumentException("Keystore does not contain a certificate with alias '" + alias + "'");
+        }
+        return cert;
     }
 
     /**
@@ -259,7 +293,7 @@ public final class KeyStoreUtil {
         KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
         Key key = ks.getKey(alias, ksPass);
         if (key == null) {
-            throw new IllegalArgumentException("No secret key found for alias: " + alias);
+            throw new IllegalArgumentException("Keystore does not contain a secret key with alias '" + alias + "'");
         }
         if (!(key instanceof SecretKey secretKey)) {
             throw new IllegalArgumentException("Alias does not contain a secret key");
