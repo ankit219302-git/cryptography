@@ -7,9 +7,10 @@ A modular Java-based cryptography system implementing secure **RSA-OAEP** for as
 ```
 cryptography/
 │
+├── client/          → Client module to be consumed for using encryption/decryption functionalities
 ├── encryption/      → Contains AES and RSA encryption utilities
 ├── decryption/      → Contains AES and RSA decryption utilities
-└── client/          → Client module to be consumed for using encryption/decryption functionalities
+└── helper/          → Helper module containing crypto related utilities and transformations
 ```
 
 Each module has its own source code under `src/main/java`.
