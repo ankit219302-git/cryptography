@@ -12,6 +12,7 @@ import com.cybsec.cryptography.helper.util.PasswordUtil;
 import org.junit.jupiter.api.Test;
 
 import java.security.Key;
+import java.util.Arrays;
 
 public class CryptoClientTest {
     private static final String CRYPTO_KEYSTORE_PASS_VAR = "CRYPTO_KEYSTORE_PASS";
@@ -43,7 +44,7 @@ public class CryptoClientTest {
             Key key = CryptoUtil.getAesKey("../client/src/test/resources/keys/aes/aes.key");
             String cipherText = CryptoUtil.base64Encode(encryption.encrypt(plainText, key, AESTransformation.GCM));
             byte[] decryptedText = decryption.decrypt(CryptoUtil.base64Decode(cipherText), key, AESTransformation.GCM);
-            assert PasswordUtil.constantTimeEquals(plainText, decryptedText);
+            assert Arrays.equals(plainText, decryptedText);
         } catch (Exception e) {
             assert false;
         }
