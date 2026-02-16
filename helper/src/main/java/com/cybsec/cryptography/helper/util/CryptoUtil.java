@@ -1,5 +1,6 @@
 package com.cybsec.cryptography.helper.util;
 
+import com.cybsec.cryptography.helper.transformation.asymmetric.impl.ECCTransformation;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.KeyGenerator;
@@ -8,6 +9,9 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
@@ -15,6 +19,37 @@ import static com.cybsec.cryptography.helper.Constants.*;
 
 public final class CryptoUtil {
     private CryptoUtil() {}
+
+    /**
+     * Generate asymmetric EC key pair.
+     * @return EC key pair
+     */
+    public static KeyPair generateEcKeyPair() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance(ECCTransformation.P256.getAlgorithm());
+        kpg.initialize(ECCTransformation.P256.getParameterSpec());
+        return kpg.generateKeyPair();
+    }
+
+    /**
+     * Generate asymmetric RSA key pair with default key size (2048 bits).
+     * @return RSA key pair
+     */
+    public static KeyPair generateRsaKeyPair() throws NoSuchAlgorithmException {
+        return generateRsaKeyPair(DEFAULT_RSA_KEY_SIZE_BITS);
+    }
+
+    /**
+     * Generate asymmetric RSA key pair with specified key size.
+     * @return RSA key pair
+     */
+    public static KeyPair generateRsaKeyPair(int keySize) throws NoSuchAlgorithmException {
+        if (keySize < DEFAULT_RSA_KEY_SIZE_BITS) {
+            throw new IllegalArgumentException("RSA key size must be >= " + DEFAULT_RSA_KEY_SIZE_BITS + " bits");
+        }
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance(DEFAULT_ASYMMETRIC_CRYPTOGRAPHY);
+        kpg.initialize(keySize, SECURE_RANDOM);
+        return kpg.generateKeyPair();
+    }
 
     /**
      * Generate a new 256-bit AES SecretKey.
