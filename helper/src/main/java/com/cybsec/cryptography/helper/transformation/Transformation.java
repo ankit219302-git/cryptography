@@ -18,4 +18,12 @@ public interface Transformation {
     default boolean supportsAad() {
         throw new UnsupportedOperationException("Additional Authenticated Data (AAD) not supported");
     }
+
+    default String getKeyAgreementAlgorithm() {
+        throw new UnsupportedOperationException("Key agreement algorithm not supported");
+    }
+
+    default int getSharedSecretLengthBytes() {
+        throw new UnsupportedOperationException("Shared secret not supported");
+    }
 }

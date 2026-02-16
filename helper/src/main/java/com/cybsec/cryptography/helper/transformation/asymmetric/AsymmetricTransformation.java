@@ -10,4 +10,10 @@ public interface AsymmetricTransformation extends Transformation {
 
     @Override
     AlgorithmParameterSpec getParameterSpec();
+
+    @Override
+    String getKeyAgreementAlgorithm();
+
+    @Override
+    int getSharedSecretLengthBytes();
 }

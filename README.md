@@ -8,8 +8,8 @@ A modular Java-based cryptography system implementing secure **RSA-OAEP** for as
 cryptography/
 │
 ├── client/          → Client module to be consumed for using encryption/decryption functionalities
-├── encryption/      → Contains AES and RSA encryption utilities
-├── decryption/      → Contains AES and RSA decryption utilities
+├── encryption/      → Contains AES, RSA and ECIES encryption utilities
+├── decryption/      → Contains AES, RSA and ECIES decryption utilities
 └── helper/          → Helper module containing cryptographic utilities and transformations
 ```
 
@@ -18,6 +18,12 @@ Each module has its own source code under `src/main/java`.
 ---
 
 # 🔑 Features
+
+### - ECIES Encryption/Decryption (Hybrid)
+- Elliptic Curve Integrated Encryption Scheme (ECC for key agreement + AES-GCM symmetric cipher)
+- EC **256/384-bit keypair** with **AES-256 GCM** mode (`AES/GCM/NoPadding`)
+- Private/Public key extraction from keystore
+- Safe Base64 encoding support for transport
 
 ### - RSA Encryption/Decryption (Asymmetric)
 - RSA **2048-bit keypair**
@@ -69,6 +75,7 @@ export KEYSTORE_PASSWORD=yourpassword
 # 🔑 Keystore Setup
 
 The project depends on a **keystore (like PKCS12) (`keystore.p12`)** which the consumer needs to provide. This keystore should contain:
+- ECC private key
 - RSA private key
 - X.509 certificate (contains the public key)
 
@@ -106,6 +113,17 @@ openssl x509 -in certificate.pem -pubkey -noout > public_key.pem
 ---
 
 # 🔧 How It Works
+
+## 🔸 ECIES (Hybrid)
+Used for **encrypting/decrypting larger payloads**. 
+A hybrid public-key encryption standard that combines Elliptic Curve Cryptography (ECC) with symmetric encryption (AES-GCM) to securely encrypt/decrypt data.
+
+Java transformation used:
+```
+P256 for ECC transformation + AES-GCM for symmetric transformation
+```
+
+Encoded as Base64 for safe transmission.
 
 ## 🔸 RSA-OAEP (Asymmetric)
 Used for **encrypting/decrypting only the small payloads**, not large data.
@@ -154,6 +172,7 @@ mvn test
 - Set the keystore password using **environment variables** or in a safe storage.
 - AES-GCM IVs are never reused with the same key.
 - Use RSA only for **small secrets**, not bulk data.
-- Use AES-GCM for full payload encryption with integrity protection.
+- Use ECIES or AES-GCM for full payload encryption.
+- AES-GCM supports integrity protection.
 
 ---

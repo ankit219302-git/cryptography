@@ -16,6 +16,8 @@ public final class Constants {
     public static final int AES_GCM_IV_LENGTH_BYTES = 12; // 96 bits, recommended
     public static final int AES_GCM_AUTH_TAG_LENGTH_BITS = 128; // 128-bit authentication tag
     public static final int AES_CBC_IV_LENGTH_BYTES = 16; // 128 bits
+    public static final String ECIES_HKDF_AES_GCM_INFO = "ECIES-AES-GCM";
+    public static final int ECIES_HKDF_AES_GCM_LENGTH = 32;
     static {
         try {
             SECURE_RANDOM = SecureRandom.getInstanceStrong();

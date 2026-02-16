@@ -1,5 +1,6 @@
-package com.cybsec.cryptography.encryption;
+package com.cybsec.cryptography.encryption.hybrid;
 
+import com.cybsec.cryptography.encryption.Encryption;
 import com.cybsec.cryptography.helper.transformation.Transformation;
 
 import javax.crypto.BadPaddingException;
@@ -10,12 +11,8 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
-public interface Encryption {
-    byte[] encrypt(byte[] data, Key key, Transformation transformation)
+public interface HybridEncryption extends Encryption {
+    @Override
+    byte[] encrypt(byte[] data, Key aesKey, Transformation transformation)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
-
-    default byte[] encrypt(byte[] data, Key key, byte[] additionalAuthenticatedData, Transformation transformation)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
-        throw new UnsupportedOperationException("Additional Authenticated Data (AAD) not supported");
-    }
 }

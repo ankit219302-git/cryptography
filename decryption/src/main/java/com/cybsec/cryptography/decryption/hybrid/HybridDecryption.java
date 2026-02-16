@@ -1,5 +1,6 @@
-package com.cybsec.cryptography.decryption;
+package com.cybsec.cryptography.decryption.hybrid;
 
+import com.cybsec.cryptography.decryption.Decryption;
 import com.cybsec.cryptography.helper.transformation.Transformation;
 
 import javax.crypto.BadPaddingException;
@@ -11,12 +12,8 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-public interface Decryption {
+public interface HybridDecryption extends Decryption {
+    @Override
     byte[] decrypt(byte[] data, Key key, Transformation transformation)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException;
-
-    default byte[] decrypt(byte[] data, Key key, byte[] additionalAuthenticatedData, Transformation transformation)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
-        throw new UnsupportedOperationException("Additional Authenticated Data (AAD) not supported");
-    }
 }
