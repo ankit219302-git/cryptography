@@ -169,7 +169,7 @@ mvn test
 # 🛡 Security Notes
 
 - **Do not commit your keystore** (used in user app - consumer) to version control.
-- Set the keystore password using **environment variables** or in a safe storage.
+- Set the keystore password using **environment variables**.
 - AES-GCM IVs are never reused with the same key.
 - Use RSA only for **small secrets**, not bulk data.
 - Use ECIES or AES-GCM for full payload encryption.
