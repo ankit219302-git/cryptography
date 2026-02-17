@@ -22,8 +22,4 @@ public interface Transformation {
     default String getKeyAgreementAlgorithm() {
         throw new UnsupportedOperationException("Key agreement algorithm not supported");
     }
-
-    default int getSharedSecretLengthBytes() {
-        throw new UnsupportedOperationException("Shared secret not supported");
-    }
 }

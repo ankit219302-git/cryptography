@@ -15,6 +15,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import static com.cybsec.cryptography.helper.Constants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.util.CryptoUtil.isCertificateValidForPrivateKey;
 
 public final class KeyStoreUtil {
     private static final String DEFAULT_KEYSTORE_TYPE = "PKCS12";
@@ -118,10 +119,17 @@ public final class KeyStoreUtil {
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param key Secret key to set in keystore
+     * @param keyPassword Key entry protection password
      * @param alias Key alias to set for the new key
      */
-    public static void setSecretKeyEntryInPKCS12KeyStore(String keyStoreFilePath, char[] keyStorePassword, SecretKey key, String alias) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException {
-        setSecretKeyEntryInKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, key, alias);
+    public static void setSecretKeyEntryInPKCS12KeyStore(
+            String keyStoreFilePath,
+            char[] keyStorePassword,
+            SecretKey key,
+            char[] keyPassword,
+            String alias
+    ) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException {
+        setSecretKeyEntryInKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, key, keyPassword, alias);
     }
 
     /**
@@ -130,19 +138,86 @@ public final class KeyStoreUtil {
      * @param keyStorePassword Keystore password
      * @param keyStoreType Keystore type (Default PKCS12, if null or empty)
      * @param key Secret key to set in keystore
+     * @param keyPassword Key entry protection password
      * @param alias Key alias to set for the new key
      */
-    public static void setSecretKeyEntryInKeyStore(String keyStoreFilePath, char[] keyStorePassword, String keyStoreType, SecretKey key, String alias) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException {
+    public static void setSecretKeyEntryInKeyStore(
+            String keyStoreFilePath,
+            char[] keyStorePassword,
+            String keyStoreType,
+            SecretKey key,
+            char[] keyPassword,
+            String alias
+    ) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException {
         if (StringUtils.isBlank(alias)) {
             throw new IllegalArgumentException("Invalid alias");
         }
-        KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry(key);
-        KeyStore.ProtectionParameter param = new KeyStore.PasswordProtection(keyStorePassword);
+        KeyStore.SecretKeyEntry keyEntry = new KeyStore.SecretKeyEntry(key);
+        KeyStore.ProtectionParameter keyPass = new KeyStore.PasswordProtection(keyPassword);
         char[] ksPass = PasswordUtil.clone(keyStorePassword);
         KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
-        ks.setEntry(alias, entry, param);
+        ks.setEntry(alias, keyEntry, keyPass);
         saveKeyStore(keyStoreFilePath, ksPass, ks);
         PasswordUtil.wipe(ksPass);
+        PasswordUtil.wipe(keyPassword);
+    }
+
+    /**
+     * Set a new key pair entry in existing PKCS12 keystore.
+     * @param keyStoreFilePath Keystore file path
+     * @param keyStorePassword Keystore password
+     * @param keyPair Key pair to set in keystore
+     * @param keyPassword Key pair entry protection password
+     * @param certificate Self-signed certificate containing public key
+     * @param alias Alias to set for the new key pair
+     */
+    public static void setKeyPairEntryInPKCS12KeyStore(
+            String keyStoreFilePath,
+            char[] keyStorePassword,
+            KeyPair keyPair,
+            char[] keyPassword,
+            Certificate certificate,
+            String alias
+    ) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, SignatureException, InvalidKeyException {
+        setKeyPairEntryInKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, keyPair, keyPassword, certificate, alias);
+    }
+
+    /**
+     * Set a new key pair entry in existing keystore.
+     * @param keyStoreFilePath Keystore file path
+     * @param keyStorePassword Keystore password
+     * @param keyStoreType Keystore type (Default PKCS12, if null or empty)
+     * @param keyPair Key pair to set in keystore
+     * @param keyPassword Key pair entry protection password
+     * @param certificate Self-signed certificate containing public key
+     * @param alias Alias to set for the new key pair
+     */
+    public static void setKeyPairEntryInKeyStore(
+            String keyStoreFilePath,
+            char[] keyStorePassword,
+            String keyStoreType,
+            KeyPair keyPair,
+            char[] keyPassword,
+            Certificate certificate,
+            String alias
+    ) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, SignatureException, InvalidKeyException {
+        if (StringUtils.isBlank(alias)) {
+            throw new IllegalArgumentException("Invalid alias");
+        }
+        if (!isCertificateValidForPrivateKey(certificate, keyPair.getPrivate())) {
+            throw new IllegalArgumentException("Incompatible certificate and private key");
+        }
+        char[] ksPass = PasswordUtil.clone(keyStorePassword);
+        KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
+        ks.setKeyEntry(
+                alias,
+                keyPair.getPrivate(),
+                keyPassword,
+                new Certificate[]{certificate}
+        );
+        saveKeyStore(keyStoreFilePath, ksPass, ks);
+        PasswordUtil.wipe(ksPass);
+        PasswordUtil.wipe(keyPassword);
     }
 
     /**

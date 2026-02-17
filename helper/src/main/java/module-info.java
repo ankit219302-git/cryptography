@@ -8,4 +8,6 @@ module cryptography.helper {
     exports com.cybsec.cryptography.helper.util to cryptography.client, cryptography.encryption, cryptography.decryption;
 
     requires org.apache.commons.lang3;
+    requires org.bouncycastle.provider;
+    requires org.bouncycastle.pkix;
 }
