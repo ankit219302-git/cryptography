@@ -62,7 +62,7 @@ public class CryptoClientTest {
             String keyAlias = CryptoUtil.getDataFromEnvVars(CRYPTO_RSA_ALIAS_VAR);
             Key publicKey = KeyStoreUtil.getRSAPublicKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, keyAlias);
             keyStorePassword = KeyStoreUtil.getKeyStorePassFromEnvVars(CRYPTO_KEYSTORE_PASS_VAR);
-            Key privateKey = KeyStoreUtil.getRSAPrivateKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, keyAlias);
+            Key privateKey = KeyStoreUtil.getRSAPrivateKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, keyStorePassword, keyAlias);
             byte[] cipherText = encryption.encrypt(plainText, publicKey, RSATransformation.OAEP_SHA256_MGF1);
             byte[] decryptedText = decryption.decrypt(cipherText, privateKey, RSATransformation.OAEP_SHA256_MGF1);
             assert PasswordUtil.constantTimeEquals(plainText, decryptedText);
