@@ -11,10 +11,12 @@ import java.nio.file.Path;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
-import static com.cybsec.cryptography.helper.Constants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.Constants.*;
 import static com.cybsec.cryptography.helper.util.CryptoUtil.isCertificateValidForPrivateKey;
 
 public final class KeyStoreUtil {
@@ -256,35 +258,39 @@ public final class KeyStoreUtil {
     }
 
     /**
-     * Fetch RSA private key from PKCS12 keystore.
+     * Fetch asymmetric private key from PKCS12 keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
+     * @param keyAlgorithm Key algorithm (Eg. RSA, EC)
      * @param keyPassword Key entry password
      * @param alias Key alias
-     * @return RSA Private Key
+     * @return Private Key
      */
-    public static RSAPrivateKey getRSAPrivateKeyFromPKCS12KeyStore(
+    public static PrivateKey getPrivateKeyFromPKCS12KeyStore(
             String keyStoreFilePath,
             char[] keyStorePassword,
+            String keyAlgorithm,
             char[] keyPassword,
             String alias
     ) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-        return getRSAPrivateKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, keyPassword, alias);
+        return getPrivateKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, keyAlgorithm, keyPassword, alias);
     }
 
     /**
-     * Fetch RSA private key from the specified keystore.
+     * Fetch asymmetric private key from the specified keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param keyStoreType Keystore type (Default PKCS12, if null or empty)
+     * @param keyAlgorithm Key algorithm (Eg. RSA, EC)
      * @param keyPassword Key entry password
      * @param alias Key alias
-     * @return RSA Private Key
+     * @return Private Key
      */
-    public static RSAPrivateKey getRSAPrivateKeyFromKeyStore(
+    public static PrivateKey getPrivateKeyFromKeyStore(
             String keyStoreFilePath,
             char[] keyStorePassword,
             String keyStoreType,
+            String keyAlgorithm,
             char[] keyPassword,
             String alias
     ) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
@@ -296,43 +302,58 @@ public final class KeyStoreUtil {
             throw new IllegalArgumentException("Alias '" + alias + "' not found in keystore");
         }
         Key key = ks.getKey(alias, keyPassword);
-        if (key == null) {
-            throw new IllegalArgumentException("Keystore does not contain RSA private key with alias '" + alias + "'");
-        }
-        if (!(key instanceof RSAPrivateKey privateKey)) {
-            throw new IllegalArgumentException("Alias does not contain RSA private key");
-        }
         PasswordUtil.wipe(keyPassword);
-        return privateKey;
+        if (key == null) {
+            throw new IllegalArgumentException("Keystore does not contain private key with alias '" + alias + "'");
+        }
+        return switch (keyAlgorithm) {
+            case DEFAULT_ASYMMETRIC_CRYPTOGRAPHY -> {
+                if (!(key instanceof RSAPrivateKey privateKey)) {
+                    throw new IllegalArgumentException("Alias does not contain RSA private key");
+                }
+                yield privateKey;
+            }
+            case EC_ASYMMETRIC_CRYPTOGRAPHY -> {
+                if (!(key instanceof ECPrivateKey privateKey)) {
+                    throw new IllegalArgumentException("Alias does not contain EC private key");
+                }
+                yield privateKey;
+            }
+            default -> throw new IllegalArgumentException("Algorithm '" + keyAlgorithm + "' is not supported");
+        };
     }
 
     /**
-     * Fetch RSA public key from PKCS12 keystore.
+     * Fetch asymmetric public key from PKCS12 keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
+     * @param keyAlgorithm Key algorithm (Eg. RSA, EC)
      * @param alias Key alias
-     * @return RSA Public Key
+     * @return Public Key
      */
-    public static RSAPublicKey getRSAPublicKeyFromPKCS12KeyStore(
+    public static PublicKey getPublicKeyFromPKCS12KeyStore(
             String keyStoreFilePath,
             char[] keyStorePassword,
+            String keyAlgorithm,
             String alias
     ) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
-        return getRSAPublicKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, alias);
+        return getPublicKeyFromKeyStore(keyStoreFilePath, keyStorePassword, DEFAULT_KEYSTORE_TYPE, keyAlgorithm, alias);
     }
 
     /**
-     * Fetch RSA public key from the specified keystore.
+     * Fetch asymmetric public key from the specified keystore.
      * @param keyStoreFilePath Keystore file path
      * @param keyStorePassword Keystore password
      * @param keyStoreType Keystore type (Default PKCS12, if null or empty)
+     * @param keyAlgorithm Key algorithm (Eg. RSA, EC)
      * @param alias Key alias
-     * @return RSA Public Key
+     * @return Public Key
      */
-    public static RSAPublicKey getRSAPublicKeyFromKeyStore(
+    public static PublicKey getPublicKeyFromKeyStore(
             String keyStoreFilePath,
             char[] keyStorePassword,
             String keyStoreType,
+            String keyAlgorithm,
             String alias
     ) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
         if (StringUtils.isBlank(alias)) {
@@ -341,12 +362,23 @@ public final class KeyStoreUtil {
         KeyStore ks = loadKeyStore(keyStoreFilePath, keyStorePassword, keyStoreType);
         Certificate cert = ks.getCertificate(alias);
         if (cert == null) {
-            throw new IllegalArgumentException("Keystore does not contain RSA public key with alias '" + alias + "'");
+            throw new IllegalArgumentException("Keystore does not contain public key with alias '" + alias + "'");
         }
-        if (!(cert.getPublicKey() instanceof RSAPublicKey publicKey)) {
-            throw new IllegalArgumentException("Alias does not contain RSA public key");
-        }
-        return publicKey;
+        return switch (keyAlgorithm) {
+            case DEFAULT_ASYMMETRIC_CRYPTOGRAPHY -> {
+                if (!(cert.getPublicKey() instanceof RSAPublicKey publicKey)) {
+                    throw new IllegalArgumentException("Alias does not contain RSA public key");
+                }
+                yield publicKey;
+            }
+            case EC_ASYMMETRIC_CRYPTOGRAPHY -> {
+                if (!(cert.getPublicKey() instanceof ECPublicKey publicKey)) {
+                    throw new IllegalArgumentException("Alias does not contain EC public key");
+                }
+                yield publicKey;
+            }
+            default -> throw new IllegalArgumentException("Algorithm '" + keyAlgorithm + "' is not supported");
+        };
     }
 
     /**

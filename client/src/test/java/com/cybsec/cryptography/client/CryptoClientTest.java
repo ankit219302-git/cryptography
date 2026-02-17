@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import java.security.Key;
 import java.util.Arrays;
 
+import static com.cybsec.cryptography.helper.Constants.DEFAULT_ASYMMETRIC_CRYPTOGRAPHY;
+
 public class CryptoClientTest {
     private static final String CRYPTO_KEYSTORE_PASS_VAR = "CRYPTO_KEYSTORE_PASS";
     private static final String CRYPTO_RSA_ALIAS_VAR = "CRYPTO_RSA_ALIAS";
@@ -60,9 +62,9 @@ public class CryptoClientTest {
         try {
             char[] keyStorePassword = KeyStoreUtil.getKeyStorePassFromEnvVars(CRYPTO_KEYSTORE_PASS_VAR);
             String keyAlias = CryptoUtil.getDataFromEnvVars(CRYPTO_RSA_ALIAS_VAR);
-            Key publicKey = KeyStoreUtil.getRSAPublicKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, keyAlias);
+            Key publicKey = KeyStoreUtil.getPublicKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, DEFAULT_ASYMMETRIC_CRYPTOGRAPHY, keyAlias);
             keyStorePassword = KeyStoreUtil.getKeyStorePassFromEnvVars(CRYPTO_KEYSTORE_PASS_VAR);
-            Key privateKey = KeyStoreUtil.getRSAPrivateKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, keyStorePassword, keyAlias);
+            Key privateKey = KeyStoreUtil.getPrivateKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, DEFAULT_ASYMMETRIC_CRYPTOGRAPHY, keyStorePassword, keyAlias);
             byte[] cipherText = encryption.encrypt(plainText, publicKey, RSATransformation.OAEP_SHA256_MGF1);
             byte[] decryptedText = decryption.decrypt(cipherText, privateKey, RSATransformation.OAEP_SHA256_MGF1);
             assert PasswordUtil.constantTimeEquals(plainText, decryptedText);
