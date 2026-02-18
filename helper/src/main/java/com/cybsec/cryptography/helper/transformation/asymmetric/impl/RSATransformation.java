@@ -56,9 +56,4 @@ public enum RSATransformation implements AsymmetricTransformation {
     public String getKeyAgreementAlgorithm() {
         throw new UnsupportedOperationException("Key agreement algorithm not supported");
     }
-
-    @Override
-    public int getSharedSecretLengthBytes() {
-        throw new UnsupportedOperationException("Shared secret not supported");
-    }
 }
