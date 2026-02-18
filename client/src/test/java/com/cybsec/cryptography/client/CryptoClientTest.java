@@ -1,9 +1,11 @@
 package com.cybsec.cryptography.client;
 
 import com.cybsec.cryptography.client.factory.AsymmetricCryptoFactory;
+import com.cybsec.cryptography.client.factory.HybridCryptoFactory;
 import com.cybsec.cryptography.client.factory.SymmetricCryptoFactory;
 import com.cybsec.cryptography.decryption.Decryption;
 import com.cybsec.cryptography.encryption.Encryption;
+import com.cybsec.cryptography.helper.transformation.asymmetric.impl.ECCTransformation;
 import com.cybsec.cryptography.helper.transformation.asymmetric.impl.RSATransformation;
 import com.cybsec.cryptography.helper.transformation.symmetric.impl.AESTransformation;
 import com.cybsec.cryptography.helper.util.CryptoUtil;
@@ -14,11 +16,14 @@ import org.junit.jupiter.api.Test;
 import java.security.Key;
 import java.util.Arrays;
 
+import static com.cybsec.cryptography.cryptography_helper.util.KeyStoreUtilTest.CRYPTO_KEYSTORE_PASS_VAR;
 import static com.cybsec.cryptography.helper.Constants.DEFAULT_ASYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.Constants.EC_ASYMMETRIC_CRYPTOGRAPHY;
 
 public class CryptoClientTest {
-    private static final String CRYPTO_KEYSTORE_PASS_VAR = "CRYPTO_KEYSTORE_PASS";
     private static final String CRYPTO_RSA_ALIAS_VAR = "CRYPTO_RSA_ALIAS";
+    public static final String CRYPTO_EC_ALIAS_VAR = "CRYPTO_EC_ALIAS";
+    public static final String CRYPTO_EC_KEY_PASS_VAR = "CRYPTO_EC_KEY_PASS";
 
     @Test
     public void testAESCryptography() {
@@ -64,9 +69,32 @@ public class CryptoClientTest {
             String keyAlias = CryptoUtil.getDataFromEnvVars(CRYPTO_RSA_ALIAS_VAR);
             Key publicKey = KeyStoreUtil.getPublicKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, DEFAULT_ASYMMETRIC_CRYPTOGRAPHY, keyAlias);
             keyStorePassword = KeyStoreUtil.getKeyStorePassFromEnvVars(CRYPTO_KEYSTORE_PASS_VAR);
-            Key privateKey = KeyStoreUtil.getPrivateKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, DEFAULT_ASYMMETRIC_CRYPTOGRAPHY, keyStorePassword, keyAlias);
+            char[] keyPassword = PasswordUtil.clone(keyStorePassword);
+            Key privateKey = KeyStoreUtil.getPrivateKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, DEFAULT_ASYMMETRIC_CRYPTOGRAPHY, keyPassword, keyAlias);
             byte[] cipherText = encryption.encrypt(plainText, publicKey, RSATransformation.OAEP_SHA256_MGF1);
             byte[] decryptedText = decryption.decrypt(cipherText, privateKey, RSATransformation.OAEP_SHA256_MGF1);
+            assert PasswordUtil.constantTimeEquals(plainText, decryptedText);
+        } catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    public void testECIESCryptography() {
+        CryptoClient cryptoClient = new CryptoClient(new HybridCryptoFactory());
+        Encryption encryption = cryptoClient.getEncryption();
+        Decryption decryption = cryptoClient.getDecryption();
+        byte[] plainText = "Hello World".getBytes();
+        String keyStorePath = "../client/src/test/resources/keystore/crypto-keystore.p12";
+        try {
+            char[] keyStorePassword = KeyStoreUtil.getKeyStorePassFromEnvVars(CRYPTO_KEYSTORE_PASS_VAR);
+            char[] keyPassword = PasswordUtil.getFromEnv(CRYPTO_EC_KEY_PASS_VAR);
+            String keyAlias = CryptoUtil.getDataFromEnvVars(CRYPTO_EC_ALIAS_VAR);
+            Key publicKey = KeyStoreUtil.getPublicKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, EC_ASYMMETRIC_CRYPTOGRAPHY, keyAlias);
+            keyStorePassword = KeyStoreUtil.getKeyStorePassFromEnvVars(CRYPTO_KEYSTORE_PASS_VAR);
+            Key privateKey = KeyStoreUtil.getPrivateKeyFromPKCS12KeyStore(keyStorePath, keyStorePassword, EC_ASYMMETRIC_CRYPTOGRAPHY, keyPassword, keyAlias);
+            byte[] cipherText = encryption.encrypt(plainText, publicKey, ECCTransformation.P256);
+            byte[] decryptedText = decryption.decrypt(cipherText, privateKey, ECCTransformation.P256);
             assert PasswordUtil.constantTimeEquals(plainText, decryptedText);
         } catch (Exception e) {
             assert false;

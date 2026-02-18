@@ -13,4 +13,7 @@ public interface AsymmetricTransformation extends Transformation {
 
     @Override
     String getKeyAgreementAlgorithm();
+
+    @Override
+    int getSharedSecretLengthBytes();
 }

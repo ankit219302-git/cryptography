@@ -13,7 +13,8 @@ import java.nio.ByteBuffer;
 import java.security.*;
 import java.security.interfaces.ECPublicKey;
 
-import static com.cybsec.cryptography.helper.Constants.*;
+import static com.cybsec.cryptography.helper.Constants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.Constants.ECIES_HKDF_AES_GCM_INFO;
 
 public class ECIESEncryption implements HybridEncryption {
     /**
@@ -51,7 +52,7 @@ public class ECIESEncryption implements HybridEncryption {
                 sharedSecret,
                 null,
                 ECIES_HKDF_AES_GCM_INFO.getBytes(),
-                ECIES_HKDF_AES_GCM_LENGTH
+                transformation.getSharedSecretLengthBytes()
         );
         SecretKey aesKey = new SecretKeySpec(aesKeyBytes, DEFAULT_SYMMETRIC_CRYPTOGRAPHY);
 
@@ -61,10 +62,9 @@ public class ECIESEncryption implements HybridEncryption {
 
         // Serialize
         byte[] ephemeralPubKey = ephemeralKeyPair.getPublic().getEncoded();
-
         //This is how the buffer need to be allocated
         /*
-        ByteBuffer buffer = ByteBuffer.allocate(
+        ByteBuffer finalCipher = ByteBuffer.allocate(
                 4 + ephemeralPubKey.length + iv.length + cipherText.length
         );
         */
@@ -72,14 +72,13 @@ public class ECIESEncryption implements HybridEncryption {
         // But since 'byte[] cipherText' has both IV and cipher text as part of the array,
         // separate addition of iv length not needed and is commented above
         // The first allocation is 4 since int always stores 4 bytes (32 bits) of data, and our first entry in the buffer is
-        // buffer.putInt(ephemeralPubKey.length), which will be 4 bytes
-        ByteBuffer buffer = ByteBuffer.allocate(
+        // finalCipher.putInt(ephemeralPubKey.length), which will be 4 bytes
+        ByteBuffer finalCipher = ByteBuffer.allocate(
                 4 + ephemeralPubKey.length + cipherText.length
         );
-
-        buffer.putInt(ephemeralPubKey.length);
-        buffer.put(ephemeralPubKey);
-        buffer.put(cipherText);
-        return buffer.array();
+        finalCipher.putInt(ephemeralPubKey.length)
+                .put(ephemeralPubKey)
+                .put(cipherText);
+        return finalCipher.array();
     }
 }

@@ -16,7 +16,8 @@ import java.security.interfaces.ECPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
-import static com.cybsec.cryptography.helper.Constants.*;
+import static com.cybsec.cryptography.helper.Constants.DEFAULT_SYMMETRIC_CRYPTOGRAPHY;
+import static com.cybsec.cryptography.helper.Constants.ECIES_HKDF_AES_GCM_INFO;
 
 public class ECIESDecryption implements HybridDecryption {
     /**
@@ -46,13 +47,9 @@ public class ECIESDecryption implements HybridDecryption {
         buffer.get(ephemeralPubKeyBytes);
 
         KeyFactory kf = KeyFactory.getInstance(transformation.getAlgorithm());
-        ECPublicKey ephemeralPubKey = (ECPublicKey)
-                kf.generatePublic(new X509EncodedKeySpec(ephemeralPubKeyBytes));
-
-        byte[] iv = new byte[AESTransformation.GCM.getIvLengthBytes()];
-        buffer.get(iv);
-        byte[] cipherText = new byte[buffer.remaining()];
-        buffer.get(cipherText);
+        ECPublicKey ephemeralPubKey = (ECPublicKey) kf.generatePublic(new X509EncodedKeySpec(ephemeralPubKeyBytes));
+        byte[] ivPlusCipherText = new byte[buffer.remaining()];
+        buffer.get(ivPlusCipherText);
 
         // ECDH (Elliptic Curve Diffie-Hellman key agreement protocol)
         KeyAgreement ka = KeyAgreement.getInstance(transformation.getKeyAgreementAlgorithm());
@@ -65,11 +62,11 @@ public class ECIESDecryption implements HybridDecryption {
                 sharedSecret,
                 null,
                 ECIES_HKDF_AES_GCM_INFO.getBytes(),
-                ECIES_HKDF_AES_GCM_LENGTH
+                transformation.getSharedSecretLengthBytes()
         );
         SecretKey aesKey = new SecretKeySpec(aesKeyBytes, DEFAULT_SYMMETRIC_CRYPTOGRAPHY);
         PasswordUtil.wipe(aesKeyBytes);
 
-        return new AESDecryption().decrypt(data, aesKey, AESTransformation.GCM);
+        return new AESDecryption().decrypt(ivPlusCipherText, aesKey, AESTransformation.GCM);
     }
 }

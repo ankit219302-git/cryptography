@@ -72,8 +72,8 @@ public class AESEncryption implements SymmetricEncryption {
         byte[] cipherText = cipher.doFinal(data);
         // Prepend IV for transport: IV | (ciphertext + AAD auth tag (if present))
         ByteBuffer finalCipher = ByteBuffer.allocate(iv.length + cipherText.length);
-        finalCipher.put(iv);
-        finalCipher.put(cipherText);
+        finalCipher.put(iv)
+                .put(cipherText);
         return finalCipher.array();
     }
 }

@@ -13,7 +13,8 @@ public enum ECCTransformation implements AsymmetricTransformation {
     P256(
             "EC",
             new ECGenParameterSpec("secp256r1"),
-            "ECDH" // Elliptic Curve Diffie-Hellman key agreement protocol
+            "ECDH", // Elliptic Curve Diffie-Hellman key agreement protocol
+            32
     ),
 
     /**
@@ -23,21 +24,25 @@ public enum ECCTransformation implements AsymmetricTransformation {
     P384(
             "EC",
             new ECGenParameterSpec("secp384r1"),
-            "ECDH" // Elliptic Curve Diffie-Hellman key agreement protocol
+            "ECDH", // Elliptic Curve Diffie-Hellman key agreement protocol
+            48
     );
 
     private final String keyAlgorithm;
     private final ECGenParameterSpec curveSpec;
     private final String keyAgreementAlgorithm;
+    private final int sharedSecretLengthBytes;
 
     ECCTransformation(
             String keyAlgorithm,
             ECGenParameterSpec curveSpec,
-            String keyAgreementAlgorithm
+            String keyAgreementAlgorithm,
+            int sharedSecretLengthBytes
     ) {
         this.keyAlgorithm = keyAlgorithm;
         this.curveSpec = curveSpec;
         this.keyAgreementAlgorithm = keyAgreementAlgorithm;
+        this.sharedSecretLengthBytes = sharedSecretLengthBytes;
     }
 
     @Override
@@ -53,5 +58,10 @@ public enum ECCTransformation implements AsymmetricTransformation {
     @Override
     public String getKeyAgreementAlgorithm() {
         return this.keyAgreementAlgorithm;
+    }
+
+    @Override
+    public int getSharedSecretLengthBytes() {
+        return this.sharedSecretLengthBytes;
     }
 }

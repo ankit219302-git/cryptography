@@ -4,6 +4,8 @@ module cryptography.encryption {
     exports com.cybsec.cryptography.encryption.asymmetric.impl to cryptography.client;
     exports com.cybsec.cryptography.encryption.symmetric to cryptography.client;
     exports com.cybsec.cryptography.encryption.symmetric.impl to cryptography.client;
+    exports com.cybsec.cryptography.encryption.hybrid to cryptography.client;
+    exports com.cybsec.cryptography.encryption.hybrid.impl to cryptography.client;
 
     requires cryptography.helper;
 }
