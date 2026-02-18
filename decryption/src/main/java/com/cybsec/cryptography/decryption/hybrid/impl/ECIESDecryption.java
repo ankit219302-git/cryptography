@@ -66,7 +66,6 @@ public class ECIESDecryption implements HybridDecryption {
         );
         SecretKey aesKey = new SecretKeySpec(aesKeyBytes, DEFAULT_SYMMETRIC_CRYPTOGRAPHY);
         PasswordUtil.wipe(aesKeyBytes);
-
         return new AESDecryption().decrypt(ivPlusCipherText, aesKey, AESTransformation.GCM);
     }
 }
