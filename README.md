@@ -1,6 +1,10 @@
 # 🔐 Cryptography Utility
 
-A modular Java-based cryptography system implementing secure **RSA-OAEP** for asymmetric encryption/decryption and **AES-GCM** for symmetric encryption/decryption.
+A modular Java-based cryptography system implementing secure -
+
+- **ECIES** for hybrid encryption/decryption
+- **RSA-OAEP** for asymmetric encryption/decryption
+- **AES-GCM** for symmetric encryption/decryption
 
 ## 📁 Project Modules
 
