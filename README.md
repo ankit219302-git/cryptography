@@ -3,8 +3,8 @@
 A modular Java-based cryptography system implementing secure -
 
 - **ECIES** for hybrid encryption/decryption
-- **RSA-OAEP** for asymmetric encryption/decryption
-- **AES-GCM** for symmetric encryption/decryption
+- **RSA** for asymmetric encryption/decryption
+- **AES** for symmetric encryption/decryption
 
 ## 📁 Project Modules
 
@@ -21,7 +21,7 @@ Each module has its own source code under `src/main/java`.
 
 ---
 
-# 🔑 Features
+# ✨ Features
 
 ### - ECIES Encryption/Decryption (Hybrid)
 - Elliptic Curve Integrated Encryption Scheme (ECC for key agreement + AES-GCM symmetric cipher)
@@ -49,7 +49,7 @@ Each module has its own source code under `src/main/java`.
 ### - Key Storage (e.g. PKCS12) 
 - Current implementation only supports key storage in KeyStore
 - Private key stored in **{keystore}.p12**
-- Public key extracted from certificate
+- Public key extracted from certificate in keystore
 - The consumer can directly pass Keystore password, or it can be read from **environment variable**
     - Example for setting env variable:  
       `export KEYSTORE_PASSWORD=mysecurepassword`
@@ -120,7 +120,7 @@ openssl x509 -in certificate.pem -pubkey -noout > public_key.pem
 
 ## 🔸 ECIES (Hybrid)
 Used for **encrypting/decrypting larger payloads**. 
-A hybrid public-key encryption standard that combines Elliptic Curve Cryptography (ECC) with symmetric encryption (AES-GCM) to securely encrypt/decrypt data.
+A hybrid public-private key encryption standard that combines Elliptic Curve Cryptography (ECC) with symmetric encryption (AES-GCM) to securely encrypt/decrypt data.
 
 Java transformation used:
 ```
@@ -172,7 +172,7 @@ mvn test
 
 # 🛡 Security Notes
 
-- **Do not commit your keystore** (used in user app - consumer) to version control.
+- **Do not commit your keystore** (used in user app/consumer app) to version control.
 - Set the keystore password using **environment variables**.
 - AES-GCM IVs are never reused with the same key.
 - Use RSA only for **small secrets**, not bulk data.
